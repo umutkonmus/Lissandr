@@ -13,24 +13,40 @@ protocol Endpoint {
     var queryItems: [URLQueryItem] { get }
 }
 
+enum Kind {
+    case deals(storeID: String? = nil, pageSize: Int = 30)
+    case search(title: String, limit: Int = 60, exact: Bool = false)
+    case game(id: String) // details + cheapest price ever
+    case deal(id: String) // resolve dealID -> gameID
+    case stores
+}
+
 struct CheapSharkEndpoint: Endpoint {
-    enum Kind {
-        case deals(storeID: String? = nil, pageSize: Int = 30)
-        case search(title: String, limit: Int = 60, exact: Bool = false)
-        case game(id: String) // details + cheapest price ever
-        case stores
-    }
+    
     private let kind: Kind
-    init(_ kind: Kind) { self.kind = kind }
+    
+    init(_ kind: Kind) {
+        self.kind = kind
+    }
 
     var path: String {
         switch kind {
         case .deals: return "/deals"
         case .search: return "/games"
         case .game: return "/games"
+        case .deal: return "/deals"
         case .stores: return "/stores"
         }
     }
+    
+    var percentEncodedQueryOverride: String? {
+            switch kind {
+            case .deal(let id):
+                return "id=\(id)"
+            default:
+                return nil
+            }
+        }
 
     var method: HTTPMethod { .GET }
 
@@ -49,6 +65,8 @@ struct CheapSharkEndpoint: Endpoint {
             ]
         case .game(let id):
             return [URLQueryItem(name: "id", value: id)]
+        case .deal(_):
+            return []
         case .stores:
             return []
         }

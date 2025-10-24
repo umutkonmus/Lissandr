@@ -55,7 +55,21 @@ final class DealsListPresenter: DealsListPresenterProtocol {
     func didTapAddToWatchlist(_ index: Int) {
         guard deals.indices.contains(index) else { return }
         let d = deals[index]
-        let item = WatchItem(gameID: d.steamAppID ?? d.dealID, title: d.title, lastKnownPrice: Double(d.salePrice))
-        WatchlistStore.shared.add(item)
+        
+        Task { [weak self] in
+            guard let self else { return }
+            do {
+                let gameID = try await interactor.resolveGameID(fromDealID: d.dealID)
+                let item = WatchItem(gameID: gameID, title: d.title, lastKnownPrice: Double(d.salePrice))
+                WatchlistStore.shared.add(item)
+                await MainActor.run {
+                    self.view?.showToast(message:"“\(d.title)” listeye eklendi")
+                }
+            } catch {
+                await MainActor.run {
+                    self.view?.showError("Listeye eklenemedi: \(error.localizedDescription)")
+                }
+            }
+        }
     }
 }

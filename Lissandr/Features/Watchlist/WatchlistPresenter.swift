@@ -25,8 +25,10 @@ final class WatchlistPresenter: WatchlistPresenterProtocol {
             let gameIDs = self.items.map { $0.gameID }
             for gid in gameIDs {
                 do {
-                    let current = try await interactor.fetchCurrentPrice(gameID: gid)
-                    self.view?.updatePrice(for: gid, current: current)
+                    let current = try await interactor.fetchCurrentDetail(gameID: gid)
+                    let price = current.deals?.compactMap { Double($0.price) }.min()
+                    self.view?.updatePrice(for: gid, price: price)
+                    self.view?.updateThumb(for: gid, url: current.info.thumb)
                 } catch {
                     // silently ignore per-row errors
                 }

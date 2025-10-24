@@ -77,3 +77,49 @@ final class DealsListViewController: UIViewController, DealsListViewProtocol, UI
         return cell
     }
 }
+
+extension DealsListViewController {
+    func showToast(message: String) {
+        let toast = UILabel()
+        toast.text = " \(message) "
+        toast.font = .systemFont(ofSize: 16, weight: .medium)
+        toast.textColor = .white
+        toast.backgroundColor = UIColor.systemBlue.withAlphaComponent(0.9)
+        toast.textAlignment = .center
+        toast.numberOfLines = 0
+        toast.alpha = 0
+        toast.layer.cornerRadius = 14
+        toast.clipsToBounds = true
+        toast.layer.shadowColor = UIColor.black.cgColor
+        toast.layer.shadowOpacity = 0.3
+        toast.layer.shadowOffset = CGSize(width: 0, height: 3)
+        toast.layer.shadowRadius = 4
+
+        view.addSubview(toast)
+        toast.snp.makeConstraints { make in
+            make.centerX.equalToSuperview()
+            make.bottom.equalTo(view.safeAreaLayoutGuide).inset(40)
+            make.width.lessThanOrEqualTo(view.snp.width).multipliedBy(0.8)
+        }
+
+        UIView.animate(withDuration: 0.4,
+                       delay: 0,
+                       usingSpringWithDamping: 0.7,
+                       initialSpringVelocity: 0.5,
+                       options: [],
+                       animations: {
+            toast.alpha = 1
+            toast.transform = CGAffineTransform(scaleX: 1.05, y: 1.05)
+        }) { _ in
+            UIView.animate(withDuration: 0.3,
+                           delay: 2.2,
+                           options: [.curveEaseInOut],
+                           animations: {
+                toast.alpha = 0
+                toast.transform = .identity
+            }) { _ in
+                toast.removeFromSuperview()
+            }
+        }
+    }
+}

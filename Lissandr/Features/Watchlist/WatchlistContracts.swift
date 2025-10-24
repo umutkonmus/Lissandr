@@ -9,9 +9,10 @@ import UIKit
 
 protocol WatchlistViewProtocol: AnyObject {
     func show(items: [WatchItem])
-    func updatePrice(for gameID: String, current: Double?)
+    func updatePrice(for gameID: String, price: Double?)
     func showLoading(_ loading: Bool)
     func showError(_ message: String)
+    func updateThumb(for gameID: String, url: String?)
 }
 
 protocol WatchlistPresenterProtocol: AnyObject {
@@ -23,7 +24,7 @@ protocol WatchlistPresenterProtocol: AnyObject {
 protocol WatchlistInteractorProtocol: AnyObject {
     func loadWatchlist() -> [WatchItem]
     func remove(gameID: String)
-    func fetchCurrentPrice(gameID: String) async throws -> Double?
+    func fetchCurrentDetail(gameID: String) async throws -> GameDetailResponse
 }
 
 protocol WatchlistRouterProtocol: AnyObject {

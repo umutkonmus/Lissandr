@@ -8,6 +8,7 @@
 import UIKit
 import SnapKit
 
+
 final class WatchlistViewController: UIViewController, WatchlistViewProtocol, UITableViewDataSource, UITableViewDelegate {
     var presenter: WatchlistPresenterProtocol!
 
@@ -17,7 +18,7 @@ final class WatchlistViewController: UIViewController, WatchlistViewProtocol, UI
 
     private var rows: [WatchRow] = [] // derived model for UI
 
-    struct WatchRow { let gameID: String; let title: String; var lastKnown: Double?; var current: Double? }
+    struct WatchRow { let gameID: String; let title: String; var lastKnown: Double?; var current: Double?; var thumb: String? }
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -48,21 +49,36 @@ final class WatchlistViewController: UIViewController, WatchlistViewProtocol, UI
 
     // MARK: View Protocol
     func show(items: [WatchItem]) {
-        rows = items.map { .init(gameID: $0.gameID, title: $0.title, lastKnown: $0.lastKnownPrice, current: nil) }
+        rows = items.map { .init(gameID: $0.gameID, title: $0.title, lastKnown: $0.lastKnownPrice, current: nil, thumb: nil) }
         tableView.reloadData()
     }
 
-    func updatePrice(for gameID: String, current: Double?) {
+    func updatePrice(for gameID: String, price: Double?) {
         if let idx = rows.firstIndex(where: { $0.gameID == gameID }) {
-            rows[idx].current = current
+            rows[idx].current = price
             if let visible = tableView.indexPathsForVisibleRows, visible.contains(IndexPath(row: idx, section: 0)) {
                 tableView.reloadRows(at: [IndexPath(row: idx, section: 0)], with: .fade)
             }
         }
-        refresher.endRefreshing()
     }
 
-    func showLoading(_ loading: Bool) { DispatchQueue.main.async { loading ? self.activity.startAnimating() : self.activity.stopAnimating() } }
+    func updateThumb(for gameID: String, url: String?) {
+        if let idx = rows.firstIndex(where: { $0.gameID == gameID }) {
+            rows[idx].thumb = url
+            if let visible = tableView.indexPathsForVisibleRows, visible.contains(IndexPath(row: idx, section: 0)) {
+                tableView.reloadRows(at: [IndexPath(row: idx, section: 0)], with: .none)
+            }
+        }
+    }
+
+    func showLoading(_ loading: Bool) {
+        DispatchQueue.main.async {
+            loading ? self.activity.startAnimating() : self.activity.stopAnimating()
+            if !loading {
+                self.refresher.endRefreshing()
+            }
+        }
+    }
 
     func showError(_ message: String) {
         let ac = UIAlertController(title: "Hata", message: message, preferredStyle: .alert)
@@ -76,7 +92,7 @@ final class WatchlistViewController: UIViewController, WatchlistViewProtocol, UI
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: WatchlistCell.reuse, for: indexPath) as! WatchlistCell
         let r = rows[indexPath.row]
-        cell.configure(title: r.title, lastKnown: r.lastKnown, current: r.current)
+        cell.configure(title: r.title, lastKnown: r.lastKnown, current: r.current, thumbURL: r.thumb)
         return cell
     }
 

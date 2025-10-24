@@ -15,7 +15,12 @@ final class HTTPClient {
     
     func request<T: Decodable>(_ endpoint: Endpoint, as type: T.Type) async throws -> T {
         var components = URLComponents(url: baseURL.appendingPathComponent(endpoint.path), resolvingAgainstBaseURL: false)!
-        components.queryItems = endpoint.queryItems
+        if let cs = endpoint as? CheapSharkEndpoint, let raw = cs.percentEncodedQueryOverride {
+            // For /deal: use raw query exactly as provided (no extra encoding)
+            components.percentEncodedQuery = raw
+        } else {
+            components.queryItems = endpoint.queryItems
+        }
         guard let url = components.url else { throw URLError(.badURL) }
         
         var request = URLRequest(url: url)
@@ -23,9 +28,16 @@ final class HTTPClient {
         request.setValue("application/json", forHTTPHeaderField: "Accept")
         
         let (data, response) = try await URLSession.shared.data(for: request)
-        guard let http = response as? HTTPURLResponse, (200..<300).contains(http.statusCode) else {
+        guard let http = response as? HTTPURLResponse else {
+            throw URLError(.cannotParseResponse)
+        }
+
+        guard (200..<300).contains(http.statusCode) else {
+            print(url)
+            print("HTTP Error:", http.statusCode)
             throw URLError(.badServerResponse)
         }
+        
         let decoder = JSONDecoder()
         decoder.keyDecodingStrategy = .convertFromSnakeCase
         return try decoder.decode(T.self, from: data)

@@ -14,4 +14,12 @@ final class DealsListInteractor: DealsListInteractorProtocol {
     func fetchStores() async throws -> [Store] {
         try await HTTPClient.shared.request(CheapSharkEndpoint(.stores), as: [Store].self)
     }
+    
+    func resolveGameID(fromDealID dealID: String) async throws -> String {
+        let response: DealDetailResponse = try await HTTPClient.shared.request(
+            CheapSharkEndpoint(.deal(id: dealID)),
+            as: DealDetailResponse.self
+        )
+        return response.gameInfo.gameID
+    }
 }

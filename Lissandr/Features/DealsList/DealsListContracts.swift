@@ -11,6 +11,7 @@ protocol DealsListViewProtocol: AnyObject {
     func display(deals: [DealSummary], stores: [String: Store])
     func showLoading(_ loading: Bool)
     func showError(_ message: String)
+    func showToast(message: String)
 }
 
 protocol DealsListPresenterProtocol: AnyObject {
@@ -23,6 +24,7 @@ protocol DealsListPresenterProtocol: AnyObject {
 protocol DealsListInteractorProtocol: AnyObject {
     func fetchDeals() async throws -> [DealSummary]
     func fetchStores() async throws -> [Store]
+    func resolveGameID(fromDealID dealID: String) async throws -> String 
 }
 
 protocol DealsListRouterProtocol: AnyObject {
