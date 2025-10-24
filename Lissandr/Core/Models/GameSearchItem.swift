@@ -6,3 +6,10 @@
 //
 
 import Foundation
+
+struct GameSearchItem: Decodable {
+    let gameID: String
+    let external: String
+    let cheapest: String
+    let thumb: String
+}

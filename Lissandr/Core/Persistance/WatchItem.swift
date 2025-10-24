@@ -6,3 +6,9 @@
 //
 
 import Foundation
+
+struct WatchItem: Codable, Hashable {
+    let gameID: String
+    var title: String
+    var lastKnownPrice: Double?
+}

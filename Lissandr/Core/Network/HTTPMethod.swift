@@ -5,4 +5,4 @@
 //  Created by Umut Konmuş on 24.10.2025.
 //
 
-import Foundation
+enum HTTPMethod: String { case GET, POST, PUT, PATCH, DELETE }

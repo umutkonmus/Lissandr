@@ -6,6 +6,7 @@
 //
 
 import Foundation
+
 struct DealSummary: Decodable {
     let dealID: String
     let title: String

@@ -6,3 +6,10 @@
 //
 
 import Foundation
+
+
+struct Store: Decodable {
+    let storeID: String
+    let storeName: String
+    let isActive: Int
+}

@@ -6,6 +6,11 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		85FC29442EABA824002417DB /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 85FC29432EABA824002417DB /* SnapKit */; };
+		85FC29472EABA870002417DB /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = 85FC29462EABA870002417DB /* Kingfisher */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		85FC28E92EAB8137002417DB /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -33,7 +38,7 @@
 		85FC28FA2EAB8137002417DB /* Exceptions for "Lissandr" folder in "Lissandr" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
-				Info.plist,
+				App/Info.plist,
 			);
 			target = 85FC28D12EAB8135002417DB /* Lissandr */;
 		};
@@ -65,6 +70,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				85FC29472EABA870002417DB /* Kingfisher in Frameworks */,
+				85FC29442EABA824002417DB /* SnapKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -125,6 +132,8 @@
 			);
 			name = Lissandr;
 			packageProductDependencies = (
+				85FC29432EABA824002417DB /* SnapKit */,
+				85FC29462EABA870002417DB /* Kingfisher */,
 			);
 			productName = Lissandr;
 			productReference = 85FC28D22EAB8135002417DB /* Lissandr.app */;
@@ -208,6 +217,10 @@
 			);
 			mainGroup = 85FC28C92EAB8135002417DB;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				85FC29422EABA824002417DB /* XCRemoteSwiftPackageReference "SnapKit" */,
+				85FC29452EABA870002417DB /* XCRemoteSwiftPackageReference "Kingfisher" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 85FC28D32EAB8135002417DB /* Products */;
 			projectDirPath = "";
@@ -291,12 +304,11 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 6YANNN5W87;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = Lissandr/Info.plist;
+				INFOPLIST_FILE = Lissandr/App/Info.plist;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.entertainment";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
-				INFOPLIST_KEY_UIMainStoryboardFile = Main;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -305,6 +317,10 @@
 				PRODUCT_BUNDLE_IDENTIFIER = uk.Lissandr;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
 				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -323,12 +339,11 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 6YANNN5W87;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = Lissandr/Info.plist;
+				INFOPLIST_FILE = Lissandr/App/Info.plist;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.entertainment";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
-				INFOPLIST_KEY_UIMainStoryboardFile = Main;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -337,6 +352,10 @@
 				PRODUCT_BUNDLE_IDENTIFIER = uk.Lissandr;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
 				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -591,6 +610,38 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		85FC29422EABA824002417DB /* XCRemoteSwiftPackageReference "SnapKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/SnapKit/SnapKit.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.7.1;
+			};
+		};
+		85FC29452EABA870002417DB /* XCRemoteSwiftPackageReference "Kingfisher" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/onevcat/Kingfisher.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 8.6.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		85FC29432EABA824002417DB /* SnapKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 85FC29422EABA824002417DB /* XCRemoteSwiftPackageReference "SnapKit" */;
+			productName = SnapKit;
+		};
+		85FC29462EABA870002417DB /* Kingfisher */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 85FC29452EABA870002417DB /* XCRemoteSwiftPackageReference "Kingfisher" */;
+			productName = Kingfisher;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 85FC28CA2EAB8135002417DB /* Project object */;
 }
