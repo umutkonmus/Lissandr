@@ -14,11 +14,16 @@ final class WatchlistPresenter: WatchlistPresenterProtocol {
 
     func viewDidLoad() {
         items = interactor.loadWatchlist()
-        Task { @MainActor in self.view?.show(items: self.items) }
-        refresh() // first fetch
+        refresh()
+    }
+    
+    func reload() {
+        items = interactor.loadWatchlist()
+        Task { @MainActor in view?.show(items: items) }
     }
 
     func refresh() {
+        reload()
         Task { [weak self] in
             guard let self else { return }
             self.view?.showLoading(true)
@@ -42,6 +47,6 @@ final class WatchlistPresenter: WatchlistPresenterProtocol {
         let gid = items[index].gameID
         interactor.remove(gameID: gid)
         items.remove(at: index)
-        Task { @MainActor in self.view?.show(items: self.items) }
+        refresh()
     }
 }

@@ -43,8 +43,13 @@ final class SearchPresenter: SearchPresenterProtocol {
     func addToWatchlist(index: Int) {
         guard results.indices.contains(index) else { return }
         let item = results[index]
-        let w = WatchItem(gameID: item.gameID, title: item.external, lastKnownPrice: Double(item.cheapest))
-        WatchlistStore.shared.add(w)
+        
+        let normalized = item.cheapest.replacingOccurrences(of: ",", with: ".")
+        let lastKnown = Double(normalized)
+
+        let watch = WatchItem(gameID: item.gameID, title: item.external, lastKnownPrice: lastKnown)
+        WatchlistStore.shared.add(watch)
+        self.view?.showToast(message:"“\(item.external)” listeye eklendi")
     }
 
     func displayInfo(for index: Int) -> (storeName: String?, oldPrice: String?) {

@@ -12,6 +12,7 @@ protocol SearchViewProtocol: AnyObject {
     func showLoading(_ loading: Bool)
     func showError(_ message: String)
     func updateRow(at index: Int, storeName: String?, oldPrice: String?)
+    func showToast(message: String)
 }
 
 protocol SearchPresenterProtocol: AnyObject {

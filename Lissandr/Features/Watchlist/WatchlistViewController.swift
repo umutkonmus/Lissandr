@@ -24,9 +24,6 @@ final class WatchlistViewController: UIViewController, WatchlistViewProtocol, UI
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
 
-        // Nav
-        navigationItem.rightBarButtonItem = UIBarButtonItem(systemItem: .refresh, primaryAction: UIAction(handler: { [weak self] _ in self?.presenter.refresh() }))
-
         // Table
         view.addSubview(tableView)
         tableView.dataSource = self; tableView.delegate = self
@@ -43,6 +40,10 @@ final class WatchlistViewController: UIViewController, WatchlistViewProtocol, UI
         activity.snp.makeConstraints { $0.center.equalToSuperview() }
 
         presenter.viewDidLoad()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        presenter.refresh()
     }
 
     @objc private func onPull() { presenter.refresh() }
