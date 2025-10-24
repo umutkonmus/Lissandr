@@ -23,6 +23,13 @@ final class DealsListViewController: UIViewController, DealsListViewProtocol, UI
         view.backgroundColor = .systemBackground
         navigationItem.rightBarButtonItem = UIBarButtonItem(systemItem: .search, primaryAction: UIAction(handler: { [weak self] _ in self?.presenter.didTapSearch() }))
         
+        navigationItem.leftBarButtonItem = UIBarButtonItem(
+            title: "Takip Listem",
+            style: .plain,
+            target: self,
+            action: #selector(openWatchlist)
+        )
+        
         view.addSubview(tableView)
         tableView.dataSource = self; tableView.delegate = self
         tableView.register(DealsListCell.self, forCellReuseIdentifier: DealsListCell.reuse)
@@ -35,6 +42,11 @@ final class DealsListViewController: UIViewController, DealsListViewProtocol, UI
         activity.snp.makeConstraints { $0.center.equalToSuperview() }
         
         presenter.viewDidLoad()
+    }
+    
+    @objc private func openWatchlist() {
+        let vc = WatchlistRouter.createModule()
+        navigationController?.pushViewController(vc, animated: true)
     }
     
     func display(deals: [DealSummary], stores: [String : Store]) {

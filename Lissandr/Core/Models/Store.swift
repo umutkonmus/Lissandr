@@ -13,3 +13,4 @@ struct Store: Decodable {
     let storeName: String
     let isActive: Int
 }
+

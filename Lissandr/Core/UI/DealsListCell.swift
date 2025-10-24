@@ -86,7 +86,7 @@ final class DealsListCell: UITableViewCell {
     func configure(title: String, store: String, price: String, oldPrice: String, thumbURL: String) {
         titleLabel.text = title
         storeLabel.text = store
-        priceLabel.text = "₺\(price)"
+        priceLabel.text = "$\(price)"
         oldPriceLabel.attributedText = NSAttributedString(string: "₺\(oldPrice)", attributes: [.strikethroughStyle: NSUnderlineStyle.single.rawValue])
         if let url = URL(string: thumbURL) {
             cover.kf.indicatorType = .activity
