@@ -26,6 +26,8 @@ final class DealsListViewController: UIViewController, DealsListViewProtocol, UI
         view.addSubview(tableView)
         tableView.dataSource = self; tableView.delegate = self
         tableView.register(DealsListCell.self, forCellReuseIdentifier: DealsListCell.reuse)
+        tableView.rowHeight = UITableView.automaticDimension
+        tableView.estimatedRowHeight = 88
         tableView.snp.makeConstraints { $0.edges.equalTo(view.safeAreaLayoutGuide) }
         
         view.addSubview(activity)

@@ -12,7 +12,7 @@ import SnapKit
 final class SplashViewController: UIViewController, SplashViewProtocol {
     var presenter: SplashPresenterProtocol!
     
-    private let logo = UIImageView(image: UIImage(named: "AppIcon"))
+    private let logo = UIImageView(image: UIImage(named: "1024"))
     private let powered = UILabel()
     private let activity = UIActivityIndicatorView(style: .large)
     

@@ -29,16 +29,20 @@ final class DealsListCell: UITableViewCell {
 
     private func setup() {
         selectionStyle = .none
+        
         cover.contentMode = .scaleAspectFill
         cover.clipsToBounds = true
         cover.layer.cornerRadius = 8
         contentView.addSubview(cover)
         cover.snp.makeConstraints { make in
-            make.size.equalTo(CGSize(width: 64, height: 64))
-            make.left.top.equalToSuperview().inset(12)
+            make.left.equalToSuperview().inset(12)
+            make.top.equalToSuperview().inset(12)
+            make.width.height.equalTo(64)
+            make.bottom.lessThanOrEqualToSuperview().inset(12)
         }
 
         titleLabel.font = .preferredFont(forTextStyle: .headline)
+        titleLabel.numberOfLines = 2
         contentView.addSubview(titleLabel)
         titleLabel.snp.makeConstraints { make in
             make.top.equalTo(cover.snp.top)
@@ -59,6 +63,7 @@ final class DealsListCell: UITableViewCell {
         priceLabel.snp.makeConstraints { make in
             make.left.equalTo(titleLabel)
             make.top.equalTo(storeLabel.snp.bottom).offset(6)
+            make.bottom.lessThanOrEqualToSuperview().inset(12)
         }
 
         oldPriceLabel.font = .preferredFont(forTextStyle: .subheadline)
