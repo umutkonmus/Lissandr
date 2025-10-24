@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		859582072EAC112C0048F937 /* readme.md in Resources */ = {isa = PBXBuildFile; fileRef = 859582062EAC11280048F937 /* readme.md */; };
 		85FC29442EABA824002417DB /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 85FC29432EABA824002417DB /* SnapKit */; };
 		85FC29472EABA870002417DB /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = 85FC29462EABA870002417DB /* Kingfisher */; };
 /* End PBXBuildFile section */
@@ -29,6 +30,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		859582062EAC11280048F937 /* readme.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = readme.md; sourceTree = "<group>"; };
 		85FC28D22EAB8135002417DB /* Lissandr.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Lissandr.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		85FC28E82EAB8137002417DB /* LissandrTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = LissandrTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		85FC28F22EAB8137002417DB /* LissandrUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = LissandrUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -95,6 +97,7 @@
 		85FC28C92EAB8135002417DB = {
 			isa = PBXGroup;
 			children = (
+				859582062EAC11280048F937 /* readme.md */,
 				85FC28D42EAB8135002417DB /* Lissandr */,
 				85FC28EB2EAB8137002417DB /* LissandrTests */,
 				85FC28F52EAB8137002417DB /* LissandrUITests */,
@@ -238,6 +241,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				859582072EAC112C0048F937 /* readme.md in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
