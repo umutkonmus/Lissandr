@@ -22,6 +22,13 @@ final class DealsListViewController: UIViewController, DealsListViewProtocol, UI
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
         
+        // Search button in navigation bar
+        navigationItem.rightBarButtonItem = UIBarButtonItem(
+            barButtonSystemItem: .search,
+            target: self,
+            action: #selector(searchTapped)
+        )
+        
         view.addSubview(tableView)
         tableView.dataSource = self; tableView.delegate = self
         tableView.register(DealsListCell.self, forCellReuseIdentifier: DealsListCell.reuse)
@@ -34,6 +41,10 @@ final class DealsListViewController: UIViewController, DealsListViewProtocol, UI
         activity.snp.makeConstraints { $0.center.equalToSuperview() }
         
         presenter.viewDidLoad()
+    }
+    
+    @objc private func searchTapped() {
+        presenter.didTapSearch()
     }
     
     func display(deals: [DealSummary], stores: [String : Store]) {

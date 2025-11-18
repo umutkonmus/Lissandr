@@ -19,6 +19,7 @@ protocol WatchlistPresenterProtocol: AnyObject {
     func viewDidLoad()
     func refresh()
     func delete(at index: Int)
+    func didTapGame(at index: Int)
 }
 
 protocol WatchlistInteractorProtocol: AnyObject {
@@ -29,4 +30,6 @@ protocol WatchlistInteractorProtocol: AnyObject {
 
 protocol WatchlistRouterProtocol: AnyObject {
     static func createModule() -> UIViewController
+    func routeToGameDetail(gameID: String, title: String, thumb: String?)
+    var viewController: UIViewController? { get set }
 }

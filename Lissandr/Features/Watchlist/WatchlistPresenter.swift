@@ -8,9 +8,16 @@
 final class WatchlistPresenter: WatchlistPresenterProtocol {
     weak var view: WatchlistViewProtocol?
     let interactor: WatchlistInteractorProtocol
-    init(view: WatchlistViewProtocol, interactor: WatchlistInteractorProtocol) { self.view = view; self.interactor = interactor }
+    let router: WatchlistRouterProtocol
+    
+    init(view: WatchlistViewProtocol, interactor: WatchlistInteractorProtocol, router: WatchlistRouterProtocol) { 
+        self.view = view
+        self.interactor = interactor
+        self.router = router
+    }
 
     private var items: [WatchItem] = []
+    private var thumbCache: [String: String] = [:] // gameID -> thumb URL
 
     func viewDidLoad() {
         items = interactor.loadWatchlist()
@@ -34,6 +41,8 @@ final class WatchlistPresenter: WatchlistPresenterProtocol {
                     let price = current.deals?.compactMap { Double($0.price) }.min()
                     self.view?.updatePrice(for: gid, price: price)
                     self.view?.updateThumb(for: gid, url: current.info.thumb)
+                    // Cache thumb URL
+                    self.thumbCache[gid] = current.info.thumb
                 } catch {
                     // silently ignore per-row errors
                 }
@@ -47,6 +56,14 @@ final class WatchlistPresenter: WatchlistPresenterProtocol {
         let gid = items[index].gameID
         interactor.remove(gameID: gid)
         items.remove(at: index)
+        thumbCache.removeValue(forKey: gid)
         refresh()
+    }
+    
+    func didTapGame(at index: Int) {
+        guard items.indices.contains(index) else { return }
+        let item = items[index]
+        let thumb = thumbCache[item.gameID] ?? ""
+        router.routeToGameDetail(gameID: item.gameID, title: item.title, thumb: thumb)
     }
 }

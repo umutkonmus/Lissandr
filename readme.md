@@ -9,11 +9,12 @@ Built with **Swift**, **UIKit**, **SnapKit**, and the **VIPER architecture**, it
 
 ## ✨ Features
 
-- 🎮 **Browse and Search Games** — See the latest deals and search by game title.
+- 🏠 **Home Screen** — Browse the latest game deals on the main screen.
+- 🔍 **Apple Music-Style Search** — Tap the search button to reveal an elegant search interface.
 - 📊 **Detailed Game View** — Tap any game to see comprehensive price information across multiple stores.
 - 🧾 **Track Games** — Add games to your Watchlist to monitor price drops.
 - 💰 **Push Notifications** — Get notified when a tracked game goes on sale.
-- 📱 **Modern UI** — Built with SnapKit and UIKit, including a glass-like search bar.
+- 📱 **Modern UI** — Built with SnapKit and UIKit, featuring native iOS design patterns.
 - 🔁 **Persistent Storage** — Your watchlist is saved locally using `UserDefaults`.
 - ⚙️ **Async/Await Networking** — Uses a generic, reusable network layer.
 

@@ -97,6 +97,11 @@ final class WatchlistViewController: UIViewController, WatchlistViewProtocol, UI
         return cell
     }
 
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
+        presenter.didTapGame(at: indexPath.row)
+    }
+    
     // Swipe to delete
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         let delete = UIContextualAction(style: .destructive, title: "Sil") { [weak self] _, _, done in

@@ -9,18 +9,27 @@ import Foundation
 import UIKit
 import SnapKit
 
-final class SearchViewController: UIViewController, SearchViewProtocol, UITableViewDataSource, UITableViewDelegate {
+final class SearchViewController: UIViewController, SearchViewProtocol, UITableViewDataSource, UITableViewDelegate, UISearchBarDelegate {
     var presenter: SearchPresenterProtocol!
     private var results: [GameSearchItem] = []
 
     private let tableView = UITableView(frame: .zero, style: .plain)
-    private let searchBar = LiquidSearchBar()
+    private let searchController = UISearchController(searchResultsController: nil)
     private let activity = UIActivityIndicatorView(style: .large)
-    private var searchBarBottomConstraint: Constraint?
+    private let emptyLabel = UILabel()
 
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
+        
+        // Search Controller setup (Apple Music style)
+        searchController.searchBar.delegate = self
+        searchController.searchBar.placeholder = "Oyun ara..."
+        searchController.obscuresBackgroundDuringPresentation = false
+        searchController.hidesNavigationBarDuringPresentation = false
+        navigationItem.searchController = searchController
+        navigationItem.hidesSearchBarWhenScrolling = false
+        definesPresentationContext = true
 
         // TableView
         view.addSubview(tableView)
@@ -32,13 +41,16 @@ final class SearchViewController: UIViewController, SearchViewProtocol, UITableV
         tableView.estimatedRowHeight = 88
         tableView.snp.makeConstraints { $0.edges.equalTo(view.safeAreaLayoutGuide) }
 
-        // Search bar
-        view.addSubview(searchBar)
-        searchBar.onSubmit = { [weak self] q in self?.presenter.submit(query: q) }
-        searchBar.snp.makeConstraints { make in
-            make.left.right.equalTo(view.safeAreaLayoutGuide).inset(16)
-            self.searchBarBottomConstraint = make.bottom.equalTo(view.safeAreaLayoutGuide).inset(12).constraint
-            make.height.equalTo(44)
+        // Empty state
+        emptyLabel.text = "Oyun aramak için yukarıdaki arama çubuğunu kullanın"
+        emptyLabel.textAlignment = .center
+        emptyLabel.textColor = .secondaryLabel
+        emptyLabel.numberOfLines = 0
+        emptyLabel.font = .preferredFont(forTextStyle: .body)
+        view.addSubview(emptyLabel)
+        emptyLabel.snp.makeConstraints { 
+            $0.center.equalToSuperview()
+            $0.left.right.equalToSuperview().inset(32)
         }
 
         // Activity
@@ -46,37 +58,56 @@ final class SearchViewController: UIViewController, SearchViewProtocol, UITableV
         activity.hidesWhenStopped = true
         activity.snp.makeConstraints { $0.center.equalToSuperview() }
     }
-
-    // MARK: Keyboard
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        NotificationCenter.default.addObserver(self, selector: #selector(handleKeyboard(notification:)), name: UIResponder.keyboardWillChangeFrameNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(handleKeyboard(notification:)), name: UIResponder.keyboardWillHideNotification, object: nil)
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        // Auto-focus search bar
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { [weak self] in
+            self?.searchController.searchBar.becomeFirstResponder()
+        }
     }
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-        NotificationCenter.default.removeObserver(self)
+    
+    // MARK: - UISearchBarDelegate
+    
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        guard let query = searchBar.text, !query.isEmpty else { return }
+        searchBar.resignFirstResponder()
+        presenter.submit(query: query)
     }
-    @objc private func handleKeyboard(notification: Notification) {
-        guard let info = notification.userInfo,
-              let duration = info[UIResponder.keyboardAnimationDurationUserInfoKey] as? Double,
-              let curveRaw = info[UIResponder.keyboardAnimationCurveUserInfoKey] as? UInt,
-              let endFrame = (info[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue else { return }
-        let endInView = view.convert(endFrame, from: nil)
-        let overlap = max(0, view.bounds.maxY - endInView.origin.y)
-        let extra = max(0, overlap - view.safeAreaInsets.bottom)
-        searchBarBottomConstraint?.update(inset: 12 + extra)
-        var inset = tableView.contentInset
-        inset.bottom = extra + 60
-        tableView.contentInset = inset
-        tableView.verticalScrollIndicatorInsets.bottom = inset.bottom
-        UIView.animate(withDuration: duration, delay: 0, options: UIView.AnimationOptions(rawValue: curveRaw << 16), animations: { self.view.layoutIfNeeded() }, completion: nil)
+    
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        // Optional: implement live search
+        if searchText.isEmpty {
+            results = []
+            tableView.reloadData()
+            emptyLabel.isHidden = false
+        }
     }
 
     // MARK: View Protocol
-    func showResults(_ items: [GameSearchItem]) { results = items; DispatchQueue.main.async { self.tableView.reloadData() } }
-    func showLoading(_ loading: Bool) { DispatchQueue.main.async { loading ? self.activity.startAnimating() : self.activity.stopAnimating() } }
-    func showError(_ message: String) { DispatchQueue.main.async { let ac = UIAlertController(title: "Hata", message: message, preferredStyle: .alert); ac.addAction(UIAlertAction(title: "Tamam", style: .default)); self.present(ac, animated: true) } }
+    func showResults(_ items: [GameSearchItem]) { 
+        results = items
+        DispatchQueue.main.async { 
+            self.emptyLabel.isHidden = !items.isEmpty
+            self.tableView.reloadData() 
+        }
+    }
+    
+    func showLoading(_ loading: Bool) { 
+        DispatchQueue.main.async { 
+            loading ? self.activity.startAnimating() : self.activity.stopAnimating()
+            self.emptyLabel.isHidden = loading || !self.results.isEmpty
+        }
+    }
+    
+    func showError(_ message: String) { 
+        DispatchQueue.main.async { 
+            let ac = UIAlertController(title: "Hata", message: message, preferredStyle: .alert)
+            ac.addAction(UIAlertAction(title: "Tamam", style: .default))
+            self.present(ac, animated: true)
+        }
+    }
+    
     func updateRow(at index: Int, storeName: String?, oldPrice: String?) {
         guard index < results.count else { return }
         if let visible = tableView.indexPathsForVisibleRows, visible.contains(IndexPath(row: index, section: 0)) {
