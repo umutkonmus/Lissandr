@@ -63,6 +63,11 @@ final class DealsListViewController: UIViewController, DealsListViewProtocol, UI
         cell.onAddToWatchlist = { [weak self] in self?.presenter.didTapAddToWatchlist(indexPath.row) }
         return cell
     }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
+        presenter.didTapDeal(indexPath.row)
+    }
 }
 
 extension UIViewController {

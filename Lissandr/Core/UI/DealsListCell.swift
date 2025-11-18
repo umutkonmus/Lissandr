@@ -74,12 +74,13 @@ final class DealsListCell: UITableViewCell {
             make.centerY.equalTo(priceLabel)
         }
 
-        addButton.setTitle("Takip Et", for: .normal)
+        addButton.setImage(UIImage(systemName: "bookmark"), for: .normal)
         addButton.addAction(UIAction { [weak self] _ in self?.onAddToWatchlist?() }, for: .touchUpInside)
         contentView.addSubview(addButton)
         addButton.snp.makeConstraints { make in
             make.centerY.equalToSuperview()
             make.right.equalToSuperview().inset(12)
+            make.width.height.equalTo(44)
         }
     }
 

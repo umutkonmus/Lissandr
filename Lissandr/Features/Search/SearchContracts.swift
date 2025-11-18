@@ -17,6 +17,7 @@ protocol SearchViewProtocol: AnyObject {
 
 protocol SearchPresenterProtocol: AnyObject {
     func submit(query: String)
+    func didTapGame(index: Int)
     func addToWatchlist(index: Int)
     func requestDetail(for index: Int)
     func displayInfo(for index: Int) -> (storeName: String?, oldPrice: String?)
@@ -31,4 +32,6 @@ protocol SearchInteractorProtocol: AnyObject {
 
 protocol SearchRouterProtocol: AnyObject {
     static func createModule() -> UIViewController
+    func routeToGameDetail(gameID: String, title: String, thumb: String)
+    var viewController: UIViewController? { get set }
 }

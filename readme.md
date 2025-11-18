@@ -10,6 +10,7 @@ Built with **Swift**, **UIKit**, **SnapKit**, and the **VIPER architecture**, it
 ## ✨ Features
 
 - 🎮 **Browse and Search Games** — See the latest deals and search by game title.
+- 📊 **Detailed Game View** — Tap any game to see comprehensive price information across multiple stores.
 - 🧾 **Track Games** — Add games to your Watchlist to monitor price drops.
 - 💰 **Push Notifications** — Get notified when a tracked game goes on sale.
 - 📱 **Modern UI** — Built with SnapKit and UIKit, including a glass-like search bar.
@@ -22,8 +23,8 @@ Built with **Swift**, **UIKit**, **SnapKit**, and the **VIPER architecture**, it
 
 The app follows the **VIPER pattern**:
 
-- **V**iew — Handles UI and user interaction (`DealsListViewController`, `SearchViewController`, `WatchlistViewController`).
-- **I**nteractor — Business logic and API calls (`DealsListInteractor`, `SearchInteractor`, `WatchlistInteractor`).
+- **V**iew — Handles UI and user interaction (`DealsListViewController`, `SearchViewController`, `WatchlistViewController`, `GameDetailViewController`).
+- **I**nteractor — Business logic and API calls (`DealsListInteractor`, `SearchInteractor`, `WatchlistInteractor`, `GameDetailInteractor`).
 - **P**resenter — Coordinates between view and interactor.
 - **E**ntity — Data models (`DealSummary`, `GameDetailResponse`, `WatchItem`, etc.).
 - **R**outer — Manages navigation and module assembly.

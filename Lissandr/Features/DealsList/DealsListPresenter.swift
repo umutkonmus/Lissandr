@@ -48,8 +48,26 @@ final class DealsListPresenter: DealsListPresenterProtocol {
     }
     
     func didTapSearch() {
-        guard let vc = view as? UIViewController else { return }
-        router.routeToSearch(from: vc)
+        router.routeToSearch()
+    }
+    
+    func didTapDeal(_ index: Int) {
+        guard deals.indices.contains(index) else { return }
+        let d = deals[index]
+        
+        Task { [weak self] in
+            guard let self else { return }
+            do {
+                let gameID = try await interactor.resolveGameID(fromDealID: d.dealID)
+                await MainActor.run {
+                    self.router.routeToGameDetail(gameID: gameID, title: d.title, thumb: d.thumb)
+                }
+            } catch {
+                await MainActor.run {
+                    self.view?.showError("Oyun detayı açılamadı: \(error.localizedDescription)")
+                }
+            }
+        }
     }
     
     func didTapAddToWatchlist(_ index: Int) {
@@ -63,7 +81,7 @@ final class DealsListPresenter: DealsListPresenterProtocol {
                 let item = WatchItem(gameID: gameID, title: d.title, lastKnownPrice: Double(d.salePrice))
                 WatchlistStore.shared.add(item)
                 await MainActor.run {
-                    self.view?.showToast(message:"“\(d.title)” listeye eklendi")
+                    self.view?.showToast(message:"\(d.title) listeye eklendi")
                 }
             } catch {
                 await MainActor.run {

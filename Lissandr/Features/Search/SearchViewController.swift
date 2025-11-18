@@ -101,4 +101,11 @@ final class SearchViewController: UIViewController, SearchViewProtocol, UITableV
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         presenter.requestDetail(for: indexPath.row)
     }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
+        presenter.didTapGame(index: indexPath.row)
+    }
 }
+
+

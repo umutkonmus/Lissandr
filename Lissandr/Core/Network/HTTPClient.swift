@@ -33,13 +33,28 @@ final class HTTPClient {
         }
 
         guard (200..<300).contains(http.statusCode) else {
-            print(url)
-            print("HTTP Error:", http.statusCode)
+            print("❌ HTTP Error")
+            print("URL:", url)
+            print("Status Code:", http.statusCode)
+            if let responseString = String(data: data, encoding: .utf8) {
+                print("Response:", responseString.prefix(500))
+            }
             throw URLError(.badServerResponse)
         }
         
         let decoder = JSONDecoder()
         decoder.keyDecodingStrategy = .convertFromSnakeCase
-        return try decoder.decode(T.self, from: data)
+        
+        do {
+            return try decoder.decode(T.self, from: data)
+        } catch {
+            print("❌ Decoding Error")
+            print("URL:", url)
+            print("Error:", error)
+            if let responseString = String(data: data, encoding: .utf8) {
+                print("Response:", responseString.prefix(500))
+            }
+            throw error
+        }
     }
 }

@@ -10,14 +10,16 @@ import Foundation
 final class SearchPresenter: SearchPresenterProtocol {
     weak var view: SearchViewProtocol?
     let interactor: SearchInteractorProtocol
+    let router: SearchRouterProtocol
 
     private var results: [GameSearchItem] = []
     private var storesMap: [String: Store] = [:]                 // storeID -> Store
     private var detailCache: [String: (storeID: String?, oldPrice: String?)] = [:] // gameID -> tuple
 
-    init(view: SearchViewProtocol, interactor: SearchInteractorProtocol) {
+    init(view: SearchViewProtocol, interactor: SearchInteractorProtocol, router: SearchRouterProtocol) {
         self.view = view
         self.interactor = interactor
+        self.router = router
     }
 
     func submit(query: String) {
@@ -39,6 +41,13 @@ final class SearchPresenter: SearchPresenterProtocol {
             self.view?.showLoading(false)
         }
     }
+    
+    func didTapGame(index: Int) {
+        guard results.indices.contains(index) else { return }
+        let game = results[index]
+        
+        router.routeToGameDetail(gameID: game.gameID, title: game.external, thumb: game.thumb)
+    }
 
     func addToWatchlist(index: Int) {
         guard results.indices.contains(index) else { return }
@@ -49,7 +58,7 @@ final class SearchPresenter: SearchPresenterProtocol {
 
         let watch = WatchItem(gameID: item.gameID, title: item.external, lastKnownPrice: lastKnown)
         WatchlistStore.shared.add(watch)
-        self.view?.showToast(message:"“\(item.external)” listeye eklendi")
+        self.view?.showToast(message:"\(item.external) listeye eklendi")
     }
 
     func displayInfo(for index: Int) -> (storeName: String?, oldPrice: String?) {
