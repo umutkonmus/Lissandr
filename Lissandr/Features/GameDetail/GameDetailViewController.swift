@@ -28,13 +28,22 @@ final class GameDetailViewController: UIViewController, GameDetailViewProtocol {
         view.backgroundColor = .systemBackground
         title = "Oyun Detayı"
         
-        // Add to Watchlist button
-        navigationItem.rightBarButtonItem = UIBarButtonItem(
+        // Navigation bar buttons
+        let bookmarkButton = UIBarButtonItem(
             image: UIImage(systemName: "bookmark"),
             style: .plain,
             target: self,
             action: #selector(addToWatchlistTapped)
         )
+        
+        let alertButton = UIBarButtonItem(
+            image: UIImage(systemName: "bell.badge"),
+            style: .plain,
+            target: self,
+            action: #selector(setPriceAlertTapped)
+        )
+        
+        navigationItem.rightBarButtonItems = [bookmarkButton, alertButton]
         
         // ScrollView
         view.addSubview(scrollView)
@@ -57,6 +66,118 @@ final class GameDetailViewController: UIViewController, GameDetailViewProtocol {
     
     @objc private func addToWatchlistTapped() {
         presenter.didTapAddToWatchlist()
+    }
+    
+    @objc private func setPriceAlertTapped() {
+        presenter.didTapSetPriceAlert()
+    }
+    
+    func showPriceAlertDialog(currentPrice: Double, gameTitle: String) {
+        guard let gameData = gameData else { return }
+        
+        // Mevcut alarm var mı kontrol et
+        if let existingAlert = PriceAlertStore.shared.hasActiveAlert(for: gameData.gameID) {
+            showUpdateAlertDialog(existingAlert: existingAlert, currentPrice: currentPrice)
+            return
+        }
+        
+        // Yeni alarm kur
+        let alert = UIAlertController(
+            title: "Fiyat Alarmı Kur",
+            message: "Güncel fiyat: $\(String(format: "%.2f", currentPrice))\n\nHedef fiyatınızı girin:",
+            preferredStyle: .alert
+        )
+        
+        alert.addTextField { textField in
+            textField.placeholder = "Örn: \(String(format: "%.2f", currentPrice * 0.8))"
+            textField.keyboardType = .decimalPad
+            textField.text = String(format: "%.2f", currentPrice * 0.8)
+        }
+        
+        alert.addAction(UIAlertAction(title: "İptal", style: .cancel))
+        alert.addAction(UIAlertAction(title: "Alarm Kur", style: .default) { [weak self] _ in
+            guard let self = self,
+                  let text = alert.textFields?.first?.text,
+                  let targetPrice = Double(text),
+                  let gameData = self.gameData else { return }
+            
+            if targetPrice >= currentPrice {
+                self.showToast(message: "Hedef fiyat güncel fiyattan düşük olmalı")
+                return
+            }
+            
+            let priceAlert = PriceAlert(
+                gameID: gameData.gameID,
+                gameTitle: gameData.title,
+                targetPrice: targetPrice,
+                currentPrice: currentPrice
+            )
+            
+            PriceAlertStore.shared.add(priceAlert)
+            self.showToast(message: "Fiyat alarmı kuruldu! $\(String(format: "%.2f", targetPrice))")
+        })
+        
+        present(alert, animated: true)
+    }
+    
+    private func showUpdateAlertDialog(existingAlert: PriceAlert, currentPrice: Double) {
+        let alert = UIAlertController(
+            title: "Mevcut Alarm",
+            message: "Bu oyun için zaten bir alarm var:\nHedef: $\(String(format: "%.2f", existingAlert.targetPrice))\n\nNe yapmak istersiniz?",
+            preferredStyle: .alert
+        )
+        
+        alert.addAction(UIAlertAction(title: "İptal", style: .cancel))
+        
+        alert.addAction(UIAlertAction(title: "Fiyatı Güncelle", style: .default) { [weak self] _ in
+            self?.showUpdatePriceDialog(existingAlert: existingAlert, currentPrice: currentPrice)
+        })
+        
+        alert.addAction(UIAlertAction(title: "Alarmı Sil", style: .destructive) { [weak self] _ in
+            PriceAlertStore.shared.remove(id: existingAlert.id)
+            self?.showToast(message: "Alarm silindi")
+        })
+        
+        present(alert, animated: true)
+    }
+    
+    private func showUpdatePriceDialog(existingAlert: PriceAlert, currentPrice: Double) {
+        let alert = UIAlertController(
+            title: "Hedef Fiyatı Güncelle",
+            message: "Güncel fiyat: $\(String(format: "%.2f", currentPrice))\n\nYeni hedef fiyatı girin:",
+            preferredStyle: .alert
+        )
+        
+        alert.addTextField { textField in
+            textField.placeholder = "Örn: \(String(format: "%.2f", currentPrice * 0.8))"
+            textField.keyboardType = .decimalPad
+            textField.text = String(format: "%.2f", existingAlert.targetPrice)
+        }
+        
+        alert.addAction(UIAlertAction(title: "İptal", style: .cancel))
+        alert.addAction(UIAlertAction(title: "Güncelle", style: .default) { [weak self] _ in
+            guard let self = self,
+                  let text = alert.textFields?.first?.text,
+                  let targetPrice = Double(text),
+                  let gameData = self.gameData else { return }
+            
+            if targetPrice >= currentPrice {
+                self.showToast(message: "Hedef fiyat güncel fiyattan düşük olmalı")
+                return
+            }
+            
+            let updatedAlert = PriceAlert(
+                gameID: gameData.gameID,
+                gameTitle: gameData.title,
+                targetPrice: targetPrice,
+                currentPrice: currentPrice
+            )
+            
+            PriceAlertStore.shared.updateOrAdd(updatedAlert)
+            self.showToast(message: "Alarm güncellendi! $\(String(format: "%.2f", targetPrice))")
+        })
+        
+        present(alert, animated: true)
     }
     
     // MARK: - View Protocol

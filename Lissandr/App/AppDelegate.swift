@@ -44,8 +44,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+        // İlk açılışta bildirimleri varsayılan olarak aç
+        if !UserDefaults.standard.bool(forKey: "has_launched_before") {
+            UserDefaults.standard.set(true, forKey: "has_launched_before")
+            UserDefaults.standard.set(true, forKey: "notifications_enabled")
+        }
+        
         UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound]) { granted, error in
             if let error = error { print("Notification auth error: \(error)") }
+            if !granted {
+                // Kullanıcı izin vermediyse ayarı kapat
+                UserDefaults.standard.set(false, forKey: "notifications_enabled")
+            }
         }
         registerBackgroundTasks()
         schedulePriceDropTask()

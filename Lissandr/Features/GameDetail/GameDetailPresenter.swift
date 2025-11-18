@@ -93,4 +93,9 @@ final class GameDetailPresenter: GameDetailPresenterProtocol {
         WatchlistStore.shared.add(item)
         view?.showToast(message: "\(gameData.title) takip listesine eklendi")
     }
+    
+    func didTapSetPriceAlert() {
+        guard let gameData = gameData else { return }
+        view?.showPriceAlertDialog(currentPrice: gameData.currentPrice ?? 0, gameTitle: gameData.title)
+    }
 }

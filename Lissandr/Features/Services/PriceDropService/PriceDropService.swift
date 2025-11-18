@@ -12,6 +12,7 @@ final class PriceDropService {
     private init() {}
     
     func checkWatchlistForDrops() async {
+        // Check watchlist items
         let items = WatchlistStore.shared.load()
         for item in items {
             do {
@@ -34,6 +35,39 @@ final class PriceDropService {
                 }
             } catch {
                 print("Price check error: \(error)")
+            }
+        }
+        
+        // Check price alerts
+        await checkPriceAlerts()
+    }
+    
+    private func checkPriceAlerts() async {
+        let alerts = PriceAlertStore.shared.getActiveAlerts()
+        
+        for alert in alerts {
+            do {
+                let detail: GameDetailResponse = try await HTTPClient.shared.request(
+                    CheapSharkEndpoint(.game(id: alert.gameID)), as: GameDetailResponse.self
+                )
+                
+                if let currentPrice = detail.deals?.compactMap({ Double($0.price) }).min() {
+                    // Check if price dropped below target
+                    if currentPrice <= alert.targetPrice {
+                        NotificationManager.shared.notifyPriceAlert(
+                            title: alert.gameTitle,
+                            targetPrice: alert.targetPrice,
+                            currentPrice: currentPrice
+                        )
+                        
+                        // Deactivate alert after triggering
+                        var updatedAlert = alert
+                        updatedAlert.isActive = false
+                        PriceAlertStore.shared.update(updatedAlert)
+                    }
+                }
+            } catch {
+                print("Price alert check error: \(error)")
             }
         }
     }

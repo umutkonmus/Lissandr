@@ -21,11 +21,13 @@ protocol GameDetailViewProtocol: AnyObject {
     func showLoading(_ loading: Bool)
     func showError(_ message: String)
     func showToast(message: String)
+    func showPriceAlertDialog(currentPrice: Double, gameTitle: String)
 }
 
 protocol GameDetailPresenterProtocol: AnyObject {
     func viewDidLoad()
     func didTapAddToWatchlist()
+    func didTapSetPriceAlert()
 }
 
 protocol GameDetailInteractorProtocol: AnyObject {

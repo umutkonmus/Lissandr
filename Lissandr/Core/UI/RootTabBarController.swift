@@ -30,7 +30,15 @@ final class RootTabBarController: UITabBarController {
                                            image: UIImage(systemName: "bookmark.fill"),
                                            selectedImage: UIImage(systemName: "bookmark.fill"))
 
-        viewControllers = [dealsNav, watchNav]
+        // 3) Settings (Ayarlar)
+        let settingsVC = AppSettingsRouter.createModule()
+        settingsVC.title = "Ayarlar"
+        let settingsNav = UINavigationController(rootViewController: settingsVC)
+        settingsNav.tabBarItem = UITabBarItem(title: "Ayarlar",
+                                              image: UIImage(systemName: "gearshape.fill"),
+                                              selectedImage: UIImage(systemName: "gearshape.fill"))
+
+        viewControllers = [dealsNav, watchNav, settingsNav]
 
         if #available(iOS 15.0, *) {
             let appearance = UITabBarAppearance()
