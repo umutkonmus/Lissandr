@@ -22,6 +22,12 @@ final class DealsListViewController: UIViewController, DealsListViewProtocol, UI
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
         
+        // TableView'ın tab bar altına girmesini sağla
+        edgesForExtendedLayout = [.top, .bottom]
+        extendedLayoutIncludesOpaqueBars = true
+        
+        navigationItem.largeTitleDisplayMode = .automatic
+        
         // Search button in navigation bar
         navigationItem.rightBarButtonItem = UIBarButtonItem(
             barButtonSystemItem: .search,
@@ -34,7 +40,11 @@ final class DealsListViewController: UIViewController, DealsListViewProtocol, UI
         tableView.register(DealsListCell.self, forCellReuseIdentifier: DealsListCell.reuse)
         tableView.rowHeight = UITableView.automaticDimension
         tableView.estimatedRowHeight = 88
-        tableView.snp.makeConstraints { $0.edges.equalTo(view.safeAreaLayoutGuide) }
+        tableView.contentInsetAdjustmentBehavior = .automatic
+        tableView.snp.makeConstraints { make in
+            make.edges.equalToSuperview()
+        }
+        
         
         view.addSubview(activity)
         activity.hidesWhenStopped = true

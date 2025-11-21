@@ -20,6 +20,7 @@ final class SplashRouter: SplashRouterProtocol {
 
     func routeToDeals(with deals: [DealSummary], stores: [String : Store], from: UIViewController) {
         let tabBar = RootTabBarController()
+        tabBar.tabBar.tintColor = .systemPink
 
         if let nav = tabBar.viewControllers?.first as? UINavigationController,
            let dealsVC = nav.viewControllers.first as? DealsListViewController,
