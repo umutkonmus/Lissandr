@@ -12,7 +12,6 @@ final class RootTabBarController: UITabBarController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
-        tabBar.isTranslucent = false
         tabBar.tintColor = .systemPink
 
         // 1) Deals (Ana Ekran)
