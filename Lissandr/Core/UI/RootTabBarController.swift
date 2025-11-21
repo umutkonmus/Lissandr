@@ -46,11 +46,5 @@ final class RootTabBarController: UITabBarController {
 
         viewControllers = [dealsNav, watchNav, settingsNav, searchNav]
 
-        if #available(iOS 15.0, *) {
-            let appearance = UITabBarAppearance()
-            appearance.configureWithDefaultBackground()
-            tabBar.standardAppearance = appearance
-            tabBar.scrollEdgeAppearance = appearance
-        }
     }
 }
