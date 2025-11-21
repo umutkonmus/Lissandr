@@ -43,6 +43,12 @@ final class DealsListViewController: UIViewController, DealsListViewProtocol, UI
         presenter.viewDidLoad()
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        // Reload to update bookmark icons
+        tableView.reloadData()
+    }
+    
     @objc private func searchTapped() {
         presenter.didTapSearch()
     }
@@ -70,8 +76,15 @@ final class DealsListViewController: UIViewController, DealsListViewProtocol, UI
         let cell = tableView.dequeueReusableCell(withIdentifier: DealsListCell.reuse, for: indexPath) as! DealsListCell
         let d = deals[indexPath.row]
         let storeName = stores[d.storeID]?.storeName ?? "Store #\(d.storeID)"
+        // Note: We don't have gameID here, so bookmark icon won't update until we resolve dealID
         cell.configure(title: d.title, store: storeName, price: d.salePrice, oldPrice: d.normalPrice, thumbURL: d.thumb)
-        cell.onAddToWatchlist = { [weak self] in self?.presenter.didTapAddToWatchlist(indexPath.row) }
+        cell.onAddToWatchlist = { [weak self] in 
+            self?.presenter.didTapAddToWatchlist(indexPath.row)
+            // Reload after a short delay to update icon
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                tableView.reloadRows(at: [indexPath], with: .none)
+            }
+        }
         return cell
     }
     

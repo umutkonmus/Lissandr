@@ -21,6 +21,7 @@ protocol SearchPresenterProtocol: AnyObject {
     func addToWatchlist(index: Int)
     func requestDetail(for index: Int)
     func displayInfo(for index: Int) -> (storeName: String?, oldPrice: String?)
+    func getGameID(at index: Int) -> String?
 }
 
 protocol SearchInteractorProtocol: AnyObject {

@@ -85,4 +85,9 @@ final class SearchPresenter: SearchPresenterProtocol {
             }
         }
     }
+    
+    func getGameID(at index: Int) -> String? {
+        guard results.indices.contains(index) else { return nil }
+        return results[index].gameID
+    }
 }

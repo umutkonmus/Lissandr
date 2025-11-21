@@ -65,7 +65,30 @@ final class GameDetailViewController: UIViewController, GameDetailViewProtocol {
     }
     
     @objc private func addToWatchlistTapped() {
-        presenter.didTapAddToWatchlist()
+        guard let gameData = gameData else { return }
+        
+        // Check if already in watchlist
+        let watchlist = WatchlistStore.shared.load()
+        if watchlist.contains(where: { $0.gameID == gameData.gameID }) {
+            // Remove from watchlist
+            WatchlistStore.shared.remove(gameID: gameData.gameID)
+            updateBookmarkIcon()
+            showToast(message: "\(gameData.title) takip listesinden çıkarıldı")
+        } else {
+            // Add to watchlist
+            presenter.didTapAddToWatchlist()
+            updateBookmarkIcon()
+        }
+    }
+    
+    private func updateBookmarkIcon() {
+        guard let gameData = gameData else { return }
+        
+        let watchlist = WatchlistStore.shared.load()
+        let isInWatchlist = watchlist.contains(where: { $0.gameID == gameData.gameID })
+        
+        let iconName = isInWatchlist ? "bookmark.fill" : "bookmark"
+        navigationItem.rightBarButtonItems?.first?.image = UIImage(systemName: iconName)
     }
     
     @objc private func setPriceAlertTapped() {
@@ -187,6 +210,9 @@ final class GameDetailViewController: UIViewController, GameDetailViewProtocol {
         
         DispatchQueue.main.async { [weak self] in
             guard let self else { return }
+            
+            // Update bookmark icon
+            self.updateBookmarkIcon()
             
             // Clear existing views
             self.contentStack.arrangedSubviews.forEach { $0.removeFromSuperview() }

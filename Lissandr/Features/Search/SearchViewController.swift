@@ -59,6 +59,12 @@ final class SearchViewController: UIViewController, SearchViewProtocol, UITableV
         activity.snp.makeConstraints { $0.center.equalToSuperview() }
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        // Reload to update bookmark icons
+        tableView.reloadData()
+    }
+    
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         // Auto-focus search bar
@@ -124,8 +130,12 @@ final class SearchViewController: UIViewController, SearchViewProtocol, UITableV
         let info = presenter.displayInfo(for: indexPath.row)
         let storeText = info.storeName ?? "Mağaza bekleniyor…"
         let oldPriceText = info.oldPrice ?? "-"
-        cell.configure(title: r.external, store: storeText, price: r.cheapest, oldPrice: oldPriceText, thumbURL: r.thumb)
-        cell.onAddToWatchlist = { [weak self] in self?.presenter.addToWatchlist(index: indexPath.row) }
+        let gameID = presenter.getGameID(at: indexPath.row)
+        cell.configure(title: r.external, store: storeText, price: r.cheapest, oldPrice: oldPriceText, thumbURL: r.thumb, gameID: gameID)
+        cell.onAddToWatchlist = { [weak self] in 
+            self?.presenter.addToWatchlist(index: indexPath.row)
+            tableView.reloadRows(at: [indexPath], with: .none)
+        }
         return cell
     }
 

@@ -20,6 +20,7 @@ protocol DealsListPresenterProtocol: AnyObject {
     func didTapDeal(_ index: Int)
     func didTapAddToWatchlist(_ index: Int)
     func setInitialData(deals: [DealSummary], stores: [String: Store])
+    func getDealID(at index: Int) -> String?
 }
 
 protocol DealsListInteractorProtocol: AnyObject {

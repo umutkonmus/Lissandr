@@ -18,6 +18,8 @@ final class DealsListCell: UITableViewCell {
     let priceLabel = UILabel()
     let oldPriceLabel = UILabel()
     let addButton = UIButton(type: .system)
+    
+    private var currentGameID: String?
 
     var onAddToWatchlist: (() -> Void)?
 
@@ -75,7 +77,9 @@ final class DealsListCell: UITableViewCell {
         }
 
         addButton.setImage(UIImage(systemName: "bookmark"), for: .normal)
-        addButton.addAction(UIAction { [weak self] _ in self?.onAddToWatchlist?() }, for: .touchUpInside)
+        addButton.addAction(UIAction { [weak self] _ in 
+            self?.handleBookmarkTap()
+        }, for: .touchUpInside)
         contentView.addSubview(addButton)
         addButton.snp.makeConstraints { make in
             make.centerY.equalToSuperview()
@@ -83,8 +87,44 @@ final class DealsListCell: UITableViewCell {
             make.width.height.equalTo(44)
         }
     }
+    
+    private func handleBookmarkTap() {
+        // gameID varsa ona göre, yoksa title'a göre kontrol et
+        let watchlist = WatchlistStore.shared.load()
+        
+        if let gameID = currentGameID {
+            // gameID ile kontrol
+            if watchlist.contains(where: { $0.gameID == gameID }) {
+                // Remove from watchlist
+                WatchlistStore.shared.remove(gameID: gameID)
+                addButton.setImage(UIImage(systemName: "bookmark"), for: .normal)
+            } else {
+                // Add to watchlist
+                onAddToWatchlist?()
+                addButton.setImage(UIImage(systemName: "bookmark.fill"), for: .normal)
+            }
+        } else if let title = titleLabel.text {
+            // title ile kontrol (fallback for DealsList)
+            if watchlist.contains(where: { $0.title == title }) {
+                // Remove from watchlist by title
+                if let item = watchlist.first(where: { $0.title == title }) {
+                    WatchlistStore.shared.remove(gameID: item.gameID)
+                    addButton.setImage(UIImage(systemName: "bookmark"), for: .normal)
+                }
+            } else {
+                // Add to watchlist
+                onAddToWatchlist?()
+                addButton.setImage(UIImage(systemName: "bookmark.fill"), for: .normal)
+            }
+        } else {
+            // Fallback: sadece ekle
+            onAddToWatchlist?()
+        }
+    }
 
-    func configure(title: String, store: String, price: String, oldPrice: String, thumbURL: String) {
+    func configure(title: String, store: String, price: String, oldPrice: String, thumbURL: String, gameID: String? = nil) {
+        self.currentGameID = gameID
+        
         titleLabel.text = title
         storeLabel.text = store
         priceLabel.text = "$\(price)"
@@ -95,5 +135,19 @@ final class DealsListCell: UITableViewCell {
         } else {
             cover.image = nil
         }
+        
+        // Update bookmark icon based on watchlist status
+        let watchlist = WatchlistStore.shared.load()
+        var isInWatchlist = false
+        
+        if let gameID = gameID {
+            isInWatchlist = watchlist.contains(where: { $0.gameID == gameID })
+        } else {
+            // Fallback: title'a göre kontrol et
+            isInWatchlist = watchlist.contains(where: { $0.title == title })
+        }
+        
+        let iconName = isInWatchlist ? "bookmark.fill" : "bookmark"
+        addButton.setImage(UIImage(systemName: iconName), for: .normal)
     }
 }

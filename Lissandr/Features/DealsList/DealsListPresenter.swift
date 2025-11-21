@@ -90,4 +90,9 @@ final class DealsListPresenter: DealsListPresenterProtocol {
             }
         }
     }
+    
+    func getDealID(at index: Int) -> String? {
+        guard deals.indices.contains(index) else { return nil }
+        return deals[index].dealID
+    }
 }
