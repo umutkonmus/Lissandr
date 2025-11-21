@@ -21,7 +21,8 @@ final class DealsListViewController: UIViewController, DealsListViewProtocol, UI
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .systemBackground
+        
+        view.backgroundColor = .systemGroupedBackground
         
         // TableView'ın tab bar altına girmesini sağla
         edgesForExtendedLayout = [.top, .bottom]

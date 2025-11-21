@@ -11,6 +11,7 @@ import Kingfisher
 
 final class WatchlistCell: UITableViewCell {
     static let reuse = "WatchlistCell"
+    private let blurView = UIVisualEffectView(effect: UIBlurEffect(style: .systemThinMaterial))
     private let thumbImageView = UIImageView()
     private let titleLabel = UILabel()
     private let priceLabel = UILabel()
@@ -24,13 +25,22 @@ final class WatchlistCell: UITableViewCell {
     
     private func setup() {
         selectionStyle = .none
+        backgroundColor = .clear
+        
+        // Blur container (liquid glass effect)
+        blurView.layer.cornerRadius = 12
+        blurView.clipsToBounds = true
+        contentView.addSubview(blurView)
+        blurView.snp.makeConstraints { make in
+            make.edges.equalToSuperview().inset(UIEdgeInsets(top: 6, left: 16, bottom: 6, right: 16))
+        }
         
         thumbImageView.layer.cornerRadius = 8
         thumbImageView.clipsToBounds = true
         thumbImageView.backgroundColor = UIColor.systemGray4
-        contentView.addSubview(thumbImageView)
+        blurView.contentView.addSubview(thumbImageView)
         thumbImageView.snp.makeConstraints { make in
-            make.left.equalToSuperview().inset(16)
+            make.left.equalToSuperview().inset(12)
             make.centerY.equalToSuperview()
             make.width.height.equalTo(64)
             make.top.greaterThanOrEqualToSuperview().inset(12)
@@ -38,15 +48,15 @@ final class WatchlistCell: UITableViewCell {
         }
         
         titleLabel.font = .preferredFont(forTextStyle: .headline)
-        contentView.addSubview(titleLabel)
+        blurView.contentView.addSubview(titleLabel)
         titleLabel.snp.makeConstraints { make in
             make.top.equalToSuperview().inset(12)
             make.left.equalTo(thumbImageView.snp.right).offset(12)
-            make.right.lessThanOrEqualToSuperview().inset(16)
+            make.right.lessThanOrEqualToSuperview().inset(12)
         }
         
         priceLabel.font = .preferredFont(forTextStyle: .headline)
-        contentView.addSubview(priceLabel)
+        blurView.contentView.addSubview(priceLabel)
         priceLabel.snp.makeConstraints { make in
             make.left.equalTo(titleLabel)
             make.top.equalTo(titleLabel.snp.bottom).offset(6)
@@ -55,11 +65,11 @@ final class WatchlistCell: UITableViewCell {
         
         oldPriceLabel.font = .preferredFont(forTextStyle: .subheadline)
         oldPriceLabel.textColor = .secondaryLabel
-        contentView.addSubview(oldPriceLabel)
+        blurView.contentView.addSubview(oldPriceLabel)
         oldPriceLabel.snp.makeConstraints { make in
             make.left.equalTo(priceLabel.snp.right).offset(8)
             make.centerY.equalTo(priceLabel)
-            make.right.lessThanOrEqualToSuperview().inset(16)
+            make.right.lessThanOrEqualToSuperview().inset(12)
         }
     }
     

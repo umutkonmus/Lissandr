@@ -20,6 +20,7 @@ final class SearchViewController: UIViewController, SearchViewProtocol, UITableV
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         view.backgroundColor = .systemBackground
         
         // Extended layout - tab bar altına girmesi için
@@ -47,6 +48,7 @@ final class SearchViewController: UIViewController, SearchViewProtocol, UITableV
         tableView.keyboardDismissMode = .onDrag
         tableView.rowHeight = UITableView.automaticDimension
         tableView.estimatedRowHeight = 88
+        tableView.backgroundColor = .systemBackground
         tableView.snp.makeConstraints { 
             $0.edges.equalToSuperview()
         }

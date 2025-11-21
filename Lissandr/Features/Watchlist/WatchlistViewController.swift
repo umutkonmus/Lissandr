@@ -22,7 +22,8 @@ final class WatchlistViewController: UIViewController, WatchlistViewProtocol, UI
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .systemBackground
+        
+        view.backgroundColor = .systemGroupedBackground
         
         // Extended layout
         edgesForExtendedLayout = [.top, .bottom]
@@ -39,6 +40,7 @@ final class WatchlistViewController: UIViewController, WatchlistViewProtocol, UI
         tableView.register(WatchlistCell.self, forCellReuseIdentifier: WatchlistCell.reuse)
         tableView.rowHeight = UITableView.automaticDimension
         tableView.estimatedRowHeight = 72
+        tableView.backgroundColor = .systemGroupedBackground
         tableView.refreshControl = refresher
         refresher.addTarget(self, action: #selector(onPull), for: .valueChanged)
         tableView.snp.makeConstraints { $0.edges.equalToSuperview() }

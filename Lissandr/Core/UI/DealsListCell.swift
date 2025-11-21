@@ -12,6 +12,7 @@ import Kingfisher
 
 final class DealsListCell: UITableViewCell {
     static let reuse = "DealsListCell"
+    private let blurView = UIVisualEffectView(effect: UIBlurEffect(style: .systemThinMaterial))
     private let cardView = UIView()
     let cover = UIImageView()
     let titleLabel = UILabel()
@@ -34,16 +35,23 @@ final class DealsListCell: UITableViewCell {
         selectionStyle = .none
         backgroundColor = .clear
         
-        // Card container
-        cardView.backgroundColor = .secondarySystemGroupedBackground
-        cardView.layer.cornerRadius = 12
-        cardView.layer.shadowColor = UIColor.black.cgColor
-        cardView.layer.shadowOpacity = 0.1
-        cardView.layer.shadowOffset = CGSize(width: 0, height: 2)
-        cardView.layer.shadowRadius = 4
-        contentView.addSubview(cardView)
-        cardView.snp.makeConstraints { make in
+        // Blur container (liquid glass effect)
+        blurView.layer.cornerRadius = 12
+        blurView.clipsToBounds = true
+        blurView.layer.shadowColor = UIColor.black.cgColor
+        blurView.layer.shadowOpacity = 0.1
+        blurView.layer.shadowOffset = CGSize(width: 0, height: 2)
+        blurView.layer.shadowRadius = 4
+        contentView.addSubview(blurView)
+        blurView.snp.makeConstraints { make in
             make.edges.equalToSuperview().inset(UIEdgeInsets(top: 8, left: 16, bottom: 8, right: 16))
+        }
+        
+        // Card container (içerik blur'un üstünde)
+        cardView.backgroundColor = .clear
+        blurView.contentView.addSubview(cardView)
+        cardView.snp.makeConstraints { make in
+            make.edges.equalToSuperview()
         }
         
         cover.contentMode = .scaleAspectFill

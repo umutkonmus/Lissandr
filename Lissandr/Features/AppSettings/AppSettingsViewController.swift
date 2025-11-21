@@ -47,7 +47,8 @@ final class AppSettingsViewController: UIViewController {
     }
     
     private func setupUI() {
-        view.backgroundColor = .systemBackground
+        view.backgroundColor = .systemGroupedBackground
+        
         title = "Ayarlar"
         
         // Extended layout
@@ -60,8 +61,10 @@ final class AppSettingsViewController: UIViewController {
         
         tableView.dataSource = self
         tableView.delegate = self
-        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "Cell")
-        tableView.register(SwitchCell.self, forCellReuseIdentifier: "SwitchCell")
+        tableView.register(LiquidGlassCell.self, forCellReuseIdentifier: "Cell")
+        tableView.register(LiquidGlassSwitchCell.self, forCellReuseIdentifier: "SwitchCell")
+        tableView.backgroundColor = .systemGroupedBackground
+        tableView.separatorStyle = .none
         
         view.addSubview(tableView)
         tableView.snp.makeConstraints { $0.edges.equalToSuperview() }
@@ -111,7 +114,7 @@ extension AppSettingsViewController: UITableViewDataSource, UITableViewDelegate 
         switch section {
         case .notifications:
             if indexPath.row == 0 {
-                let cell = tableView.dequeueReusableCell(withIdentifier: "SwitchCell", for: indexPath) as! SwitchCell
+                let cell = tableView.dequeueReusableCell(withIdentifier: "SwitchCell", for: indexPath) as! LiquidGlassSwitchCell
                 cell.configure(title: "Bildirimleri Aç", isOn: UserDefaults.standard.bool(forKey: "notifications_enabled"))
                 cell.onToggle = { isOn in
                     UserDefaults.standard.set(isOn, forKey: "notifications_enabled")
@@ -121,7 +124,7 @@ extension AppSettingsViewController: UITableViewDataSource, UITableViewDelegate 
                 }
                 return cell
             } else {
-                let cell = UITableViewCell(style: .value1, reuseIdentifier: nil)
+                let cell = LiquidGlassCell(style: .value1, reuseIdentifier: nil)
                 cell.textLabel?.text = "Arka Plan Yenileme"
                 cell.detailTextLabel?.text = "Saatte bir"
                 cell.accessoryType = .none
@@ -130,7 +133,7 @@ extension AppSettingsViewController: UITableViewDataSource, UITableViewDelegate 
             }
             
         case .priceAlerts:
-            let cell = UITableViewCell(style: .value1, reuseIdentifier: nil)
+            let cell = LiquidGlassCell(style: .value1, reuseIdentifier: nil)
             cell.textLabel?.text = "Fiyat Alarmlarını Yönet"
             let alertCount = PriceAlertStore.shared.getActiveAlerts().count
             cell.detailTextLabel?.text = "\(alertCount) aktif"
@@ -138,7 +141,7 @@ extension AppSettingsViewController: UITableViewDataSource, UITableViewDelegate 
             return cell
             
         case .about:
-            let cell = UITableViewCell(style: .value1, reuseIdentifier: nil)
+            let cell = LiquidGlassCell(style: .value1, reuseIdentifier: nil)
             cell.selectionStyle = indexPath.row == 2 ? .default : .none
             
             switch indexPath.row {
@@ -202,47 +205,4 @@ extension AppSettingsViewController: UITableViewDataSource, UITableViewDelegate 
     }
 }
 
-// MARK: - SwitchCell
 
-final class SwitchCell: UITableViewCell {
-    private let titleLabel = UILabel()
-    private let toggleSwitch = UISwitch()
-    
-    var onToggle: ((Bool) -> Void)?
-    
-    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
-        super.init(style: style, reuseIdentifier: reuseIdentifier)
-        setupUI()
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
-    private func setupUI() {
-        selectionStyle = .none
-        
-        contentView.addSubview(titleLabel)
-        titleLabel.font = .systemFont(ofSize: 17)
-        titleLabel.snp.makeConstraints { make in
-            make.left.equalToSuperview().inset(16)
-            make.centerY.equalToSuperview()
-        }
-        
-        contentView.addSubview(toggleSwitch)
-        toggleSwitch.addTarget(self, action: #selector(switchToggled), for: .valueChanged)
-        toggleSwitch.snp.makeConstraints { make in
-            make.right.equalToSuperview().inset(16)
-            make.centerY.equalToSuperview()
-        }
-    }
-    
-    @objc private func switchToggled() {
-        onToggle?(toggleSwitch.isOn)
-    }
-    
-    func configure(title: String, isOn: Bool) {
-        titleLabel.text = title
-        toggleSwitch.isOn = isOn
-    }
-}
