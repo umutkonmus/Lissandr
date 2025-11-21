@@ -10,11 +10,12 @@ Built with **Swift**, **UIKit**, **SnapKit**, and the **VIPER architecture**, it
 ## ✨ Features
 
 - 🏠 **Home Screen** — Browse the latest game deals on the main screen.
-- 🔍 **Apple Music-Style Search** — Tap the search button to reveal an elegant search interface.
+- 🔍 **Dedicated Search Tab** — Search button positioned separately on the tab bar for quick access.
 - 📊 **Detailed Game View** — Tap any game to see comprehensive price information across multiple stores.
 - 🧾 **Track Games** — Add games to your Watchlist to monitor price drops.
 - 💰 **Push Notifications** — Get notified when a tracked game goes on sale.
-- 📱 **Modern UI** — Built with SnapKit and UIKit, featuring native iOS design patterns.
+- 🎨 **Liquid Glass Design** — Modern blur effects and continuous corner curves following Apple's design guidelines.
+- 📱 **Native iOS UI** — Built with SnapKit and UIKit, featuring large titles and smooth animations.
 - 🔁 **Persistent Storage** — Your watchlist is saved locally using `UserDefaults`.
 - ⚙️ **Async/Await Networking** — Uses a generic, reusable network layer.
 
@@ -39,6 +40,7 @@ The app follows the **VIPER pattern**:
 - **Kingfisher** (image caching)
 - **CheapShark API**
 - **VIPER architecture**
+- **Liquid Glass UI** (UIVisualEffectView with blur effects)
 - **Background fetch + local notifications**
 
 ---
@@ -53,6 +55,21 @@ GET https://www.cheapshark.com/api/1.0/deals
 GET https://www.cheapshark.com/api/1.0/games?title={name}
 GET https://www.cheapshark.com/api/1.0/deal?id={dealID}
 ```
+
+---
+
+## 📱 Screenshots
+
+---
+
+## 🚀 Version History
+
+### v1.1.0 (Latest)
+- ✨ New dedicated search tab on tab bar
+- 🎨 Liquid glass design with blur effects
+- 🐛 Fixed bookmark icon update issues
+- 📐 Improved scroll behavior and large title animations
+- ⚙️ Enhanced settings screen with modern cell design
 
 ---
 
