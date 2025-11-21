@@ -54,6 +54,10 @@ final class AppSettingsViewController: UIViewController {
         edgesForExtendedLayout = [.top, .bottom]
         extendedLayoutIncludesOpaqueBars = true
         
+        // Large title
+        navigationController?.navigationBar.prefersLargeTitles = true
+        navigationItem.largeTitleDisplayMode = .always
+        
         tableView.dataSource = self
         tableView.delegate = self
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "Cell")

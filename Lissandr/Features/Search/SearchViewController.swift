@@ -22,11 +22,15 @@ final class SearchViewController: UIViewController, SearchViewProtocol, UITableV
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
         
-        // Extended layout
+        // Extended layout - tab bar altına girmesi için
         edgesForExtendedLayout = [.top, .bottom]
         extendedLayoutIncludesOpaqueBars = true
         
-        // Search Controller setup (Apple Music style)
+        // Large title
+        navigationController?.navigationBar.prefersLargeTitles = true
+        navigationItem.largeTitleDisplayMode = .always
+        
+        // Search Controller setup
         searchController.searchBar.delegate = self
         searchController.searchBar.placeholder = "Oyun ara..."
         searchController.obscuresBackgroundDuringPresentation = false
@@ -34,7 +38,7 @@ final class SearchViewController: UIViewController, SearchViewProtocol, UITableV
         navigationItem.searchController = searchController
         navigationItem.hidesSearchBarWhenScrolling = false
         definesPresentationContext = true
-
+        
         // TableView
         view.addSubview(tableView)
         tableView.dataSource = self
@@ -43,7 +47,9 @@ final class SearchViewController: UIViewController, SearchViewProtocol, UITableV
         tableView.keyboardDismissMode = .onDrag
         tableView.rowHeight = UITableView.automaticDimension
         tableView.estimatedRowHeight = 88
-        tableView.snp.makeConstraints { $0.edges.equalTo(view.safeAreaLayoutGuide) }
+        tableView.snp.makeConstraints { 
+            $0.edges.equalToSuperview()
+        }
 
         // Empty state
         emptyLabel.text = "Oyun aramak için yukarıdaki arama çubuğunu kullanın"
@@ -75,6 +81,12 @@ final class SearchViewController: UIViewController, SearchViewProtocol, UITableV
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { [weak self] in
             self?.searchController.searchBar.becomeFirstResponder()
         }
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        // Klavyeyi kapat
+        searchController.searchBar.resignFirstResponder()
     }
     
     // MARK: - UISearchBarDelegate
@@ -152,5 +164,3 @@ final class SearchViewController: UIViewController, SearchViewProtocol, UITableV
         presenter.didTapGame(index: indexPath.row)
     }
 }
-
-
