@@ -51,7 +51,7 @@ final class GameDetailViewController: UIViewController, GameDetailViewProtocol {
         
         // ScrollView
         view.addSubview(scrollView)
-        scrollView.snp.makeConstraints { $0.edges.equalTo(view.safeAreaLayoutGuide) }
+        scrollView.snp.makeConstraints { $0.edges.equalToSuperview() }
         
         // Content Stack
         scrollView.addSubview(contentStack)
