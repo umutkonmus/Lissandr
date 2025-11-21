@@ -102,12 +102,16 @@ final class DealsListViewController: UIViewController, DealsListViewProtocol, UI
         cell.configure(title: d.title, store: storeName, price: d.salePrice, oldPrice: d.normalPrice, thumbURL: d.thumb)
         cell.onAddToWatchlist = { [weak self] in 
             self?.presenter.didTapAddToWatchlist(indexPath.row)
-            // Reload after a short delay to update icon
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-                tableView.reloadRows(at: [indexPath], with: .none)
-            }
         }
         return cell
+    }
+    
+    func reloadRow(at index: Int) {
+        guard deals.indices.contains(index) else { return }
+        let indexPath = IndexPath(row: index, section: 0)
+        DispatchQueue.main.async { [weak self] in
+            self?.tableView.reloadRows(at: [indexPath], with: .none)
+        }
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {

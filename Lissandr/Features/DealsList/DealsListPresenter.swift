@@ -78,6 +78,7 @@ final class DealsListPresenter: DealsListPresenterProtocol {
                 WatchlistStore.shared.add(item)
                 await MainActor.run {
                     self.view?.showToast(message:"\(d.title) listeye eklendi")
+                    self.view?.reloadRow(at: index)
                 }
             } catch {
                 await MainActor.run {

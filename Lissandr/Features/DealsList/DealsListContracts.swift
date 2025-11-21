@@ -12,6 +12,7 @@ protocol DealsListViewProtocol: AnyObject {
     func showLoading(_ loading: Bool)
     func showError(_ message: String)
     func showToast(message: String)
+    func reloadRow(at index: Int)
 }
 
 protocol DealsListPresenterProtocol: AnyObject {
