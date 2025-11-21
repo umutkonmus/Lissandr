@@ -12,7 +12,7 @@ import Kingfisher
 
 final class DealsListCell: UITableViewCell {
     static let reuse = "DealsListCell"
-    private let blurView = UIVisualEffectView(effect: UIBlurEffect(style: .systemThinMaterial))
+    private let blurView = UIVisualEffectView(effect: UIBlurEffect(style: .systemUltraThinMaterial))
     private let cardView = UIView()
     let cover = UIImageView()
     let titleLabel = UILabel()

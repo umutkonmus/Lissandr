@@ -10,7 +10,7 @@ import SnapKit
 
 final class LiquidGlassCell: UITableViewCell {
     
-    private let blurView = UIVisualEffectView(effect: UIBlurEffect(style: .systemThinMaterial))
+    private let blurView = UIVisualEffectView(effect: UIBlurEffect(style: .systemUltraThinMaterial))
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -59,7 +59,7 @@ final class LiquidGlassCell: UITableViewCell {
 }
 
 final class LiquidGlassSwitchCell: UITableViewCell {
-    private let blurView = UIVisualEffectView(effect: UIBlurEffect(style: .systemThinMaterial))
+    private let blurView = UIVisualEffectView(effect: UIBlurEffect(style: .systemUltraThinMaterial))
     private let titleLabel = UILabel()
     private let toggleSwitch = UISwitch()
     

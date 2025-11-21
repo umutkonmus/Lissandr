@@ -11,7 +11,7 @@ import Kingfisher
 
 final class WatchlistCell: UITableViewCell {
     static let reuse = "WatchlistCell"
-    private let blurView = UIVisualEffectView(effect: UIBlurEffect(style: .systemThinMaterial))
+    private let blurView = UIVisualEffectView(effect: UIBlurEffect(style: .systemUltraThinMaterial))
     private let thumbImageView = UIImageView()
     private let titleLabel = UILabel()
     private let priceLabel = UILabel()

@@ -283,15 +283,16 @@ final class GameDetailViewController: UIViewController, GameDetailViewProtocol {
     }
     
     private func createPriceInfo(game: GameDetailData) -> UIView {
-        let container = UIView()
-        container.backgroundColor = .secondarySystemGroupedBackground
-        container.layer.cornerRadius = 12
+        let blurView = UIVisualEffectView(effect: UIBlurEffect(style: .systemUltraThinMaterial))
+        blurView.layer.cornerRadius = 12
+        blurView.layer.cornerCurve = .continuous
+        blurView.clipsToBounds = true
         
         let stack = UIStackView()
         stack.axis = .horizontal
         stack.distribution = .fillEqually
         stack.spacing = 1
-        container.addSubview(stack)
+        blurView.contentView.addSubview(stack)
         stack.snp.makeConstraints { $0.edges.equalToSuperview().inset(16) }
         
         // Current Price
@@ -308,7 +309,7 @@ final class GameDetailViewController: UIViewController, GameDetailViewProtocol {
         )
         stack.addArrangedSubview(lowStack)
         
-        return container
+        return blurView
     }
     
     private func createPriceColumn(title: String, price: Double?) -> UIStackView {
@@ -367,14 +368,15 @@ final class GameDetailViewController: UIViewController, GameDetailViewProtocol {
     }
     
     private func createDealRow(storeName: String, price: Double, retailPrice: Double) -> UIView {
-        let container = UIView()
-        container.backgroundColor = .secondarySystemGroupedBackground
-        container.layer.cornerRadius = 8
+        let blurView = UIVisualEffectView(effect: UIBlurEffect(style: .systemUltraThinMaterial))
+        blurView.layer.cornerRadius = 10
+        blurView.layer.cornerCurve = .continuous
+        blurView.clipsToBounds = true
         
         let storeLabel = UILabel()
         storeLabel.text = storeName
         storeLabel.font = .systemFont(ofSize: 16, weight: .medium)
-        container.addSubview(storeLabel)
+        blurView.contentView.addSubview(storeLabel)
         storeLabel.snp.makeConstraints { make in
             make.left.top.bottom.equalToSuperview().inset(12)
             make.right.lessThanOrEqualToSuperview().inset(120)
@@ -384,7 +386,7 @@ final class GameDetailViewController: UIViewController, GameDetailViewProtocol {
         priceLabel.text = String(format: "$%.2f", price)
         priceLabel.font = .systemFont(ofSize: 18, weight: .bold)
         priceLabel.textColor = .systemGreen
-        container.addSubview(priceLabel)
+        blurView.contentView.addSubview(priceLabel)
         priceLabel.snp.makeConstraints { make in
             make.right.equalToSuperview().inset(12)
             make.centerY.equalToSuperview()
@@ -400,13 +402,13 @@ final class GameDetailViewController: UIViewController, GameDetailViewProtocol {
                 ]
             )
             oldPriceLabel.font = .systemFont(ofSize: 14)
-            container.addSubview(oldPriceLabel)
+            blurView.contentView.addSubview(oldPriceLabel)
             oldPriceLabel.snp.makeConstraints { make in
                 make.right.equalTo(priceLabel.snp.left).offset(-8)
                 make.centerY.equalToSuperview()
             }
         }
         
-        return container
+        return blurView
     }
 }
