@@ -14,7 +14,6 @@ final class RootTabBarController: UITabBarController {
         view.backgroundColor = .systemBackground
         tabBar.isTranslucent = false
         tabBar.tintColor = .systemPink
-        tabBar.tintColor = .systemBlue
 
         // 1) Deals (Ana Ekran)
         let dealsVC = DealsListRouter.createModule()  
