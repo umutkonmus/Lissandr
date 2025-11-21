@@ -12,6 +12,7 @@ import Kingfisher
 
 final class DealsListCell: UITableViewCell {
     static let reuse = "DealsListCell"
+    private let cardView = UIView()
     let cover = UIImageView()
     let titleLabel = UILabel()
     let storeLabel = UILabel()
@@ -31,56 +32,71 @@ final class DealsListCell: UITableViewCell {
 
     private func setup() {
         selectionStyle = .none
+        backgroundColor = .clear
+        
+        // Card container
+        cardView.backgroundColor = .secondarySystemGroupedBackground
+        cardView.layer.cornerRadius = 12
+        cardView.layer.shadowColor = UIColor.black.cgColor
+        cardView.layer.shadowOpacity = 0.1
+        cardView.layer.shadowOffset = CGSize(width: 0, height: 2)
+        cardView.layer.shadowRadius = 4
+        contentView.addSubview(cardView)
+        cardView.snp.makeConstraints { make in
+            make.edges.equalToSuperview().inset(UIEdgeInsets(top: 8, left: 16, bottom: 8, right: 16))
+        }
         
         cover.contentMode = .scaleAspectFill
         cover.clipsToBounds = true
-        cover.layer.cornerRadius = 8
-        contentView.addSubview(cover)
+        cover.layer.cornerRadius = 10
+        cardView.addSubview(cover)
         cover.snp.makeConstraints { make in
-            make.left.equalToSuperview().inset(12)
-            make.top.equalToSuperview().inset(12)
-            make.width.height.equalTo(64)
-            make.bottom.lessThanOrEqualToSuperview().inset(12)
+            make.left.equalToSuperview().inset(16)
+            make.top.equalToSuperview().inset(16)
+            make.width.height.equalTo(80)
+            make.bottom.lessThanOrEqualToSuperview().inset(16)
         }
 
-        titleLabel.font = .preferredFont(forTextStyle: .headline)
+        titleLabel.font = .systemFont(ofSize: 17, weight: .semibold)
         titleLabel.numberOfLines = 2
-        contentView.addSubview(titleLabel)
+        cardView.addSubview(titleLabel)
         titleLabel.snp.makeConstraints { make in
             make.top.equalTo(cover.snp.top)
             make.left.equalTo(cover.snp.right).offset(12)
             make.right.lessThanOrEqualToSuperview().inset(12)
         }
 
-        storeLabel.font = .preferredFont(forTextStyle: .subheadline)
+        storeLabel.font = .systemFont(ofSize: 14)
         storeLabel.textColor = .secondaryLabel
-        contentView.addSubview(storeLabel)
+        cardView.addSubview(storeLabel)
         storeLabel.snp.makeConstraints { make in
             make.left.equalTo(titleLabel)
             make.top.equalTo(titleLabel.snp.bottom).offset(4)
         }
 
-        priceLabel.font = .preferredFont(forTextStyle: .headline)
-        contentView.addSubview(priceLabel)
+        priceLabel.font = .systemFont(ofSize: 20, weight: .bold)
+        priceLabel.textColor = .systemGreen
+        cardView.addSubview(priceLabel)
         priceLabel.snp.makeConstraints { make in
             make.left.equalTo(titleLabel)
             make.top.equalTo(storeLabel.snp.bottom).offset(6)
             make.bottom.lessThanOrEqualToSuperview().inset(12)
         }
 
-        oldPriceLabel.font = .preferredFont(forTextStyle: .subheadline)
+        oldPriceLabel.font = .systemFont(ofSize: 14)
         oldPriceLabel.textColor = .secondaryLabel
-        contentView.addSubview(oldPriceLabel)
+        cardView.addSubview(oldPriceLabel)
         oldPriceLabel.snp.makeConstraints { make in
             make.left.equalTo(priceLabel.snp.right).offset(8)
             make.centerY.equalTo(priceLabel)
         }
 
         addButton.setImage(UIImage(systemName: "bookmark"), for: .normal)
+        addButton.tintColor = .systemBlue
         addButton.addAction(UIAction { [weak self] _ in 
             self?.handleBookmarkTap()
         }, for: .touchUpInside)
-        contentView.addSubview(addButton)
+        cardView.addSubview(addButton)
         addButton.snp.makeConstraints { make in
             make.centerY.equalToSuperview()
             make.right.equalToSuperview().inset(12)

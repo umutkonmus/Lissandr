@@ -15,8 +15,9 @@ final class DealsListViewController: UIViewController, DealsListViewProtocol, UI
     private var deals: [DealSummary] = []
     private var stores: [String: Store] = [:]
     
-    private let tableView = UITableView(frame: .zero, style: .plain)
+    private let tableView = UITableView(frame: .zero, style: .insetGrouped)
     private let activity = UIActivityIndicatorView(style: .large)
+    private let refreshControl = UIRefreshControl()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -26,21 +27,26 @@ final class DealsListViewController: UIViewController, DealsListViewProtocol, UI
         edgesForExtendedLayout = [.top, .bottom]
         extendedLayoutIncludesOpaqueBars = true
         
-        navigationItem.largeTitleDisplayMode = .automatic
+        // Large title
+        navigationController?.navigationBar.prefersLargeTitles = true
+        navigationItem.largeTitleDisplayMode = .always
+        title = "Oyun Fırsatları"
         
-        // Search button in navigation bar
-        navigationItem.rightBarButtonItem = UIBarButtonItem(
-            barButtonSystemItem: .search,
-            target: self,
-            action: #selector(searchTapped)
-        )
-        
+        // TableView setup
         view.addSubview(tableView)
-        tableView.dataSource = self; tableView.delegate = self
+        tableView.dataSource = self
+        tableView.delegate = self
         tableView.register(DealsListCell.self, forCellReuseIdentifier: DealsListCell.reuse)
         tableView.rowHeight = UITableView.automaticDimension
-        tableView.estimatedRowHeight = 88
+        tableView.estimatedRowHeight = 100
         tableView.contentInsetAdjustmentBehavior = .automatic
+        tableView.separatorStyle = .none
+        tableView.backgroundColor = .systemGroupedBackground
+        
+        // Pull to refresh
+        refreshControl.addTarget(self, action: #selector(refreshData), for: .valueChanged)
+        tableView.refreshControl = refreshControl
+        
         tableView.snp.makeConstraints { make in
             make.edges.equalToSuperview()
         }
@@ -59,14 +65,20 @@ final class DealsListViewController: UIViewController, DealsListViewProtocol, UI
         tableView.reloadData()
     }
     
-    @objc private func searchTapped() {
-        presenter.didTapSearch()
+    @objc private func refreshData() {
+        presenter.viewDidLoad()
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) { [weak self] in
+            self?.refreshControl.endRefreshing()
+        }
     }
     
     func display(deals: [DealSummary], stores: [String : Store]) {
         self.deals = deals
         self.stores = stores
-        DispatchQueue.main.async { self.tableView.reloadData() }
+        DispatchQueue.main.async { 
+            self.tableView.reloadData()
+            self.refreshControl.endRefreshing()
+        }
     }
     
     func showLoading(_ loading: Bool) { DispatchQueue.main.async { loading ? self.activity.startAnimating() : self.activity.stopAnimating() } }

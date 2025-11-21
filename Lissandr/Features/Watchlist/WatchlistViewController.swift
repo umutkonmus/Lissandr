@@ -23,6 +23,15 @@ final class WatchlistViewController: UIViewController, WatchlistViewProtocol, UI
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
+        
+        // Extended layout
+        edgesForExtendedLayout = [.top, .bottom]
+        extendedLayoutIncludesOpaqueBars = true
+        
+        // Large title
+        navigationController?.navigationBar.prefersLargeTitles = true
+        navigationItem.largeTitleDisplayMode = .always
+        title = "Takip Listem"
 
         // Table
         view.addSubview(tableView)
@@ -32,7 +41,7 @@ final class WatchlistViewController: UIViewController, WatchlistViewProtocol, UI
         tableView.estimatedRowHeight = 72
         tableView.refreshControl = refresher
         refresher.addTarget(self, action: #selector(onPull), for: .valueChanged)
-        tableView.snp.makeConstraints { $0.edges.equalTo(view.safeAreaLayoutGuide) }
+        tableView.snp.makeConstraints { $0.edges.equalToSuperview() }
 
         // Activity
         view.addSubview(activity)

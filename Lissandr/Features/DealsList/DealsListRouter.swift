@@ -22,11 +22,6 @@ final class DealsListRouter: DealsListRouterProtocol {
         return vc
     }
     
-    func routeToSearch() {
-        let search = SearchRouter.createModule()
-        viewController?.navigationController?.pushViewController(search, animated: true)
-    }
-    
     func routeToGameDetail(gameID: String, title: String, thumb: String) {
         let detail = GameDetailRouter.createModule(gameID: gameID, title: title, thumb: thumb)
         viewController?.navigationController?.pushViewController(detail, animated: true)

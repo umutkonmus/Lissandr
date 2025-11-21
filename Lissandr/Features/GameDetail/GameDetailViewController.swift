@@ -28,6 +28,10 @@ final class GameDetailViewController: UIViewController, GameDetailViewProtocol {
         view.backgroundColor = .systemBackground
         title = "Oyun Detayı"
         
+        // Extended layout
+        edgesForExtendedLayout = [.top, .bottom]
+        extendedLayoutIncludesOpaqueBars = true
+        
         // Navigation bar buttons
         let bookmarkButton = UIBarButtonItem(
             image: UIImage(systemName: "bookmark"),

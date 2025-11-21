@@ -22,7 +22,15 @@ final class RootTabBarController: UITabBarController {
                                            image: UIImage(systemName: "house.fill"),
                                            selectedImage: UIImage(systemName: "house.fill"))
 
-        // 2) Watchlist
+        // 2) Search (Arama)
+        let searchVC = SearchRouter.createModule()
+        searchVC.title = "Ara"
+        let searchNav = UINavigationController(rootViewController: searchVC)
+        searchNav.tabBarItem = UITabBarItem(title: "Ara",
+                                            image: UIImage(systemName: "magnifyingglass"),
+                                            selectedImage: UIImage(systemName: "magnifyingglass"))
+
+        // 3) Watchlist
         let watchVC = WatchlistRouter.createModule()
         watchVC.title = "Takip Listem"
         let watchNav = UINavigationController(rootViewController: watchVC)
@@ -30,7 +38,7 @@ final class RootTabBarController: UITabBarController {
                                            image: UIImage(systemName: "bookmark.fill"),
                                            selectedImage: UIImage(systemName: "bookmark.fill"))
 
-        // 3) Settings (Ayarlar)
+        // 4) Settings (Ayarlar)
         let settingsVC = AppSettingsRouter.createModule()
         settingsVC.title = "Ayarlar"
         let settingsNav = UINavigationController(rootViewController: settingsVC)
@@ -38,7 +46,7 @@ final class RootTabBarController: UITabBarController {
                                               image: UIImage(systemName: "gearshape.fill"),
                                               selectedImage: UIImage(systemName: "gearshape.fill"))
 
-        viewControllers = [dealsNav, watchNav, settingsNav]
+        viewControllers = [dealsNav, searchNav, watchNav, settingsNav]
 
         if #available(iOS 15.0, *) {
             let appearance = UITabBarAppearance()

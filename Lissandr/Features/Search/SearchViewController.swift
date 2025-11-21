@@ -22,6 +22,10 @@ final class SearchViewController: UIViewController, SearchViewProtocol, UITableV
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
         
+        // Extended layout
+        edgesForExtendedLayout = [.top, .bottom]
+        extendedLayoutIncludesOpaqueBars = true
+        
         // Search Controller setup (Apple Music style)
         searchController.searchBar.delegate = self
         searchController.searchBar.placeholder = "Oyun ara..."

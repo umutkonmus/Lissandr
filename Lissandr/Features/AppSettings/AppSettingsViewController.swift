@@ -50,13 +50,17 @@ final class AppSettingsViewController: UIViewController {
         view.backgroundColor = .systemBackground
         title = "Ayarlar"
         
+        // Extended layout
+        edgesForExtendedLayout = [.top, .bottom]
+        extendedLayoutIncludesOpaqueBars = true
+        
         tableView.dataSource = self
         tableView.delegate = self
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "Cell")
         tableView.register(SwitchCell.self, forCellReuseIdentifier: "SwitchCell")
         
         view.addSubview(tableView)
-        tableView.snp.makeConstraints { $0.edges.equalTo(view.safeAreaLayoutGuide) }
+        tableView.snp.makeConstraints { $0.edges.equalToSuperview() }
     }
 }
 

@@ -32,6 +32,10 @@ final class SettingsViewController: UIViewController, SettingsViewProtocol {
         view.backgroundColor = .systemBackground
         title = "Fiyat Alarmları"
         
+        // Extended layout
+        edgesForExtendedLayout = [.top, .bottom]
+        extendedLayoutIncludesOpaqueBars = true
+        
         // TableView
         view.addSubview(tableView)
         tableView.dataSource = self

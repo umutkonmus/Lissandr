@@ -47,10 +47,6 @@ final class DealsListPresenter: DealsListPresenterProtocol {
         }
     }
     
-    func didTapSearch() {
-        router.routeToSearch()
-    }
-    
     func didTapDeal(_ index: Int) {
         guard deals.indices.contains(index) else { return }
         let d = deals[index]

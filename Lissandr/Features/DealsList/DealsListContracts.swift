@@ -16,7 +16,6 @@ protocol DealsListViewProtocol: AnyObject {
 
 protocol DealsListPresenterProtocol: AnyObject {
     func viewDidLoad()
-    func didTapSearch()
     func didTapDeal(_ index: Int)
     func didTapAddToWatchlist(_ index: Int)
     func setInitialData(deals: [DealSummary], stores: [String: Store])
@@ -31,7 +30,6 @@ protocol DealsListInteractorProtocol: AnyObject {
 
 protocol DealsListRouterProtocol: AnyObject {
     static func createModule() -> UIViewController
-    func routeToSearch()
     func routeToGameDetail(gameID: String, title: String, thumb: String)
     var viewController: UIViewController? { get set }
 }
