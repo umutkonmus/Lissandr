@@ -21,6 +21,44 @@ final class SearchPresenter: SearchPresenterProtocol {
         self.interactor = interactor
         self.router = router
     }
+    
+    let gameAbbreviations: [String: String] = [
+        "GTA": "Grand Theft Auto",
+        "COD": "Call of Duty",
+        "BF": "Battlefield",
+        "AC": "Assassin’s Creed",
+        "LOL": "League of Legends",
+        "WoW": "World of Warcraft",
+        "CS": "Counter-Strike",
+        "CS:GO": "Counter-Strike: Global Offensive",
+        "TES": "The Elder Scrolls",
+        "FO": "Fallout",
+        "MK": "Mortal Kombat",
+        "RE": "Resident Evil",
+        "FFX": "Final Fantasy X",
+        "FFVII": "Final Fantasy VII",
+        "KH": "Kingdom Hearts",
+        "MH": "Monster Hunter",
+        "OW": "Overwatch",
+        "DMC": "Devil May Cry",
+        "RDR": "Red Dead Redemption",
+        "MHWI": "Monster Hunter World: Iceborne",
+        "ACNH": "Animal Crossing: New Horizons",
+        "BOTW": "Breath of the Wild",
+        "SMO": "Super Mario Odyssey",
+        "MK8": "Mario Kart 8",
+        "DBZ": "Dragon Ball Z"
+    ]
+
+    func fullGameName(for input: String) -> String {
+        // Büyük/küçük harf duyarsız arama
+        if let fullName = gameAbbreviations[input.uppercased()] {
+            return fullName
+        } else {
+            // Eğer kısaltma değilse zaten tam ad girilmiş
+            return input
+        }
+    }
 
     func submit(query: String) {
         Task { [weak self] in
@@ -31,7 +69,7 @@ final class SearchPresenter: SearchPresenterProtocol {
                     let stores = try await interactor.fetchStores()
                     self.storesMap = Dictionary(uniqueKeysWithValues: stores.map { ($0.storeID, $0) })
                 }
-                let items = try await interactor.search(title: query)
+                let items = try await interactor.search(title: fullGameName(for: query))
                 self.results = items
                 self.detailCache.removeAll(keepingCapacity: true)
                 self.view?.showResults(items)
