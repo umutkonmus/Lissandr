@@ -47,6 +47,7 @@ final class GameDetailPresenter: GameDetailPresenterProtocol {
                 let currentPrice = detail.deals?.compactMap({ Double($0.price) }).min()
                 let historicalLow = Double(detail.cheapestPriceEver.price)
                 
+                
                 var dealsList: [(String, String, Double, Double)] = []
                 if let deals = detail.deals {
                     for deal in deals.prefix(10) { // Top 10 deals
@@ -58,6 +59,13 @@ final class GameDetailPresenter: GameDetailPresenterProtocol {
                         }
                     }
                 }
+                print("test")
+                var metacriticScore: String? = nil
+                if let dealID = dealsList.first?.1 {
+                    let dealDetail = try await interactor.fetchDealDetails(for: dealID)
+                    metacriticScore = String(dealDetail.gameInfo.metacriticScore!)
+                }
+                
                 
                 let gameData = GameDetailData(
                     gameID: self.gameID,
@@ -65,7 +73,8 @@ final class GameDetailPresenter: GameDetailPresenterProtocol {
                     thumb: self.gameThumb,
                     currentPrice: currentPrice,
                     historicalLow: historicalLow,
-                    deals: dealsList
+                    deals: dealsList,
+                    metacriticScore: metacriticScore
                 )
                 
                 self.gameData = gameData

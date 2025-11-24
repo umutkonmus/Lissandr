@@ -14,6 +14,7 @@ struct GameDetailData {
     var currentPrice: Double?
     var historicalLow: Double?
     var deals: [(storeName: String, dealID: String, price: Double, retailPrice: Double)]
+    let metacriticScore: String?
 }
 
 protocol GameDetailViewProtocol: AnyObject {
@@ -32,6 +33,7 @@ protocol GameDetailPresenterProtocol: AnyObject {
 
 protocol GameDetailInteractorProtocol: AnyObject {
     func fetchGameDetails(for gameID: String) async throws -> GameDetailResponse
+    func fetchDealDetails(for dealID: String) async throws -> DealDetailResponse
     func fetchStores() async throws -> [Store]
 }
 

@@ -252,7 +252,7 @@ final class GameDetailViewController: UIViewController, GameDetailViewProtocol {
     }
     
     // MARK: - UI Creation
-    
+    /*
     private func createHeader(game: GameDetailData) -> UIView {
         let container = UIView()
         
@@ -277,6 +277,109 @@ final class GameDetailViewController: UIViewController, GameDetailViewProtocol {
         titleLabel.snp.makeConstraints { make in
             make.top.equalTo(imageView.snp.bottom).offset(16)
             make.left.right.bottom.equalToSuperview()
+        }
+        
+        return container
+    }*/
+    
+    private func createHeader(game: GameDetailData) -> UIView {
+        let container = UIView()
+        
+        let imageView = UIImageView()
+        imageView.contentMode = .scaleAspectFill
+        imageView.clipsToBounds = true
+        imageView.layer.cornerRadius = 12
+        if let url = URL(string: game.thumb) {
+            imageView.kf.setImage(with: url)
+        }
+        container.addSubview(imageView)
+        imageView.snp.makeConstraints { make in
+            make.top.left.right.equalToSuperview()
+            make.height.equalTo(200)
+        }
+        
+        let titleLabel = UILabel()
+        titleLabel.text = game.title
+        titleLabel.font = .systemFont(ofSize: 24, weight: .bold)
+        titleLabel.numberOfLines = 0
+        container.addSubview(titleLabel)
+        titleLabel.snp.makeConstraints { make in
+            make.top.equalTo(imageView.snp.bottom).offset(16)
+            make.left.right.equalToSuperview()
+        }
+        
+        // MetaCritic Badge (sadece score varsa göster)
+        if let metacriticScore = game.metacriticScore,
+           let score = Int(metacriticScore),
+           score > 0 {
+            
+            let badge = createMetaCriticBadge(score: score)
+            container.addSubview(badge)
+            badge.snp.makeConstraints { make in
+                make.top.equalTo(titleLabel.snp.bottom).offset(12)
+                make.left.equalToSuperview()
+                make.bottom.equalToSuperview()
+            }
+        } else {
+            titleLabel.snp.makeConstraints { make in
+                make.bottom.equalToSuperview()
+            }
+        }
+        
+        return container
+    }
+
+    private func createMetaCriticBadge(score: Int) -> UIView {
+        let container = UIView()
+        
+        // Badge background
+        let badge = UIView()
+        badge.layer.cornerRadius = 8
+        badge.layer.cornerCurve = .continuous
+        
+        // Color based on score
+        let color: UIColor
+        if score >= 61 {
+            color = UIColor(hex: "#00ce7a") // Green (61+)
+        } else if score >= 41 {
+            color = UIColor(hex: "#ffbd3f") // Yellow (41-60)
+        } else {
+            color = UIColor(hex: "#ff6874") // Red (0-40)
+        }
+        badge.backgroundColor = color
+        
+        container.addSubview(badge)
+        badge.snp.makeConstraints { make in
+            make.edges.equalToSuperview()
+        }
+        
+        // Score label
+        let scoreLabel = UILabel()
+        scoreLabel.text = "\(score)"
+        scoreLabel.font = .systemFont(ofSize: 20, weight: .bold)
+        scoreLabel.textColor = .white
+        scoreLabel.textAlignment = .center
+        badge.addSubview(scoreLabel)
+        scoreLabel.snp.makeConstraints { make in
+            make.centerY.equalToSuperview()
+            make.left.equalToSuperview().inset(12)
+        }
+        
+        // "Metacritic" label
+        let metacriticLabel = UILabel()
+        metacriticLabel.text = "Metacritic"
+        metacriticLabel.font = .systemFont(ofSize: 12, weight: .medium)
+        metacriticLabel.textColor = .white.withAlphaComponent(0.9)
+        badge.addSubview(metacriticLabel)
+        metacriticLabel.snp.makeConstraints { make in
+            make.centerY.equalToSuperview()
+            make.left.equalTo(scoreLabel.snp.right).offset(8)
+            make.right.equalToSuperview().inset(12)
+        }
+        
+        // Container height
+        container.snp.makeConstraints { make in
+            make.height.equalTo(44)
         }
         
         return container

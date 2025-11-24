@@ -26,7 +26,7 @@ struct GameDetailResponse: Decodable {
     let info: Info
     let cheapestPriceEver: CheapestPriceEver
     let deals: [Deal]?
-    let metacriticScore: String?
+    let metacriticScore: Int?
     let metacriticLink: String?
     let steamRatingText: String?
     let steamRatingPercent: String?
