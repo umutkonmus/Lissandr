@@ -9,6 +9,7 @@ import Foundation
 import UIKit
 
 final class DealsListRouter: DealsListRouterProtocol {
+    
     weak var viewController: UIViewController?
     
     static func createModule() -> UIViewController {
@@ -22,7 +23,7 @@ final class DealsListRouter: DealsListRouterProtocol {
         return vc
     }
     
-    func routeToGameDetail(gameID: String, title: String, thumb: String) {
+    func routeToGameDetail(gameID: String,title: String, thumb: String) {
         let detail = GameDetailRouter.createModule(gameID: gameID, title: title, thumb: thumb)
         viewController?.navigationController?.pushViewController(detail, animated: true)
     }

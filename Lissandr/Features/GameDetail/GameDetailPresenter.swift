@@ -47,13 +47,14 @@ final class GameDetailPresenter: GameDetailPresenterProtocol {
                 let currentPrice = detail.deals?.compactMap({ Double($0.price) }).min()
                 let historicalLow = Double(detail.cheapestPriceEver.price)
                 
-                var dealsList: [(String, Double, Double)] = []
+                var dealsList: [(String, String, Double, Double)] = []
                 if let deals = detail.deals {
                     for deal in deals.prefix(10) { // Top 10 deals
                         if let price = Double(deal.price),
                            let retail = Double(deal.retailPrice) {
                             let storeName = self.storesMap[deal.storeID]?.storeName ?? "Store #\(deal.storeID)"
-                            dealsList.append((storeName, price, retail))
+                            let dealID = deal.dealID
+                            dealsList.append((storeName, dealID, price, retail))
                         }
                     }
                 }

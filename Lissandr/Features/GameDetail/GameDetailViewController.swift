@@ -339,7 +339,7 @@ final class GameDetailViewController: UIViewController, GameDetailViewProtocol {
         return stack
     }
     
-    private func createDealsTable(deals: [(String, Double, Double)]) -> UIView {
+    private func createDealsTable(deals: [(String, String, Double, Double)]) -> UIView {
         let container = UIView()
         
         let titleLabel = UILabel()
@@ -360,26 +360,50 @@ final class GameDetailViewController: UIViewController, GameDetailViewProtocol {
         }
         
         for deal in deals {
-            let row = createDealRow(storeName: deal.0, price: deal.1, retailPrice: deal.2)
+            let row = createDealRow(storeName: deal.0, dealID: deal.1, price: deal.2, retailPrice: deal.3)
             stack.addArrangedSubview(row)
         }
         
         return container
     }
     
-    private func createDealRow(storeName: String, price: Double, retailPrice: Double) -> UIView {
+    private func createDealRow(storeName: String, dealID: String, price: Double, retailPrice: Double) -> UIView {
         let blurView = UIVisualEffectView(effect: UIBlurEffect(style: .systemUltraThinMaterial))
         blurView.layer.cornerRadius = 10
         blurView.layer.cornerCurve = .continuous
         blurView.clipsToBounds = true
+        
+        // External link icon
+        let externalIcon = UIImageView(image: UIImage(systemName: "arrow.up.forward.square"))
+        externalIcon.tintColor = .systemBlue
+        externalIcon.contentMode = .scaleAspectFit
+        blurView.contentView.addSubview(externalIcon)
+        externalIcon.snp.makeConstraints { make in
+            make.left.equalToSuperview().inset(12)
+            make.centerY.equalToSuperview()
+            make.width.height.equalTo(20)
+        }
         
         let storeLabel = UILabel()
         storeLabel.text = storeName
         storeLabel.font = .systemFont(ofSize: 16, weight: .medium)
         blurView.contentView.addSubview(storeLabel)
         storeLabel.snp.makeConstraints { make in
-            make.left.top.bottom.equalToSuperview().inset(12)
-            make.right.lessThanOrEqualToSuperview().inset(120)
+            make.left.equalTo(externalIcon.snp.right).offset(8)
+            make.top.bottom.equalToSuperview().inset(12)
+            make.right.lessThanOrEqualToSuperview().inset(140)
+        }
+        
+        // Chevron (right arrow) indicator
+        let chevronIcon = UIImageView(image: UIImage(systemName: "chevron.right"))
+        chevronIcon.tintColor = .tertiaryLabel
+        chevronIcon.contentMode = .scaleAspectFit
+        blurView.contentView.addSubview(chevronIcon)
+        chevronIcon.snp.makeConstraints { make in
+            make.right.equalToSuperview().inset(12)
+            make.centerY.equalToSuperview()
+            make.width.equalTo(8)
+            make.height.equalTo(14)
         }
         
         let priceLabel = UILabel()
@@ -388,7 +412,7 @@ final class GameDetailViewController: UIViewController, GameDetailViewProtocol {
         priceLabel.textColor = .systemGreen
         blurView.contentView.addSubview(priceLabel)
         priceLabel.snp.makeConstraints { make in
-            make.right.equalToSuperview().inset(12)
+            make.right.equalTo(chevronIcon.snp.left).offset(-12)
             make.centerY.equalToSuperview()
         }
         
@@ -409,6 +433,29 @@ final class GameDetailViewController: UIViewController, GameDetailViewProtocol {
             }
         }
         
+        let onTapped = UITapGestureRecognizer(target: self, action: #selector(onDealTapped))
+        onTapped.dealID = dealID
+        blurView.addGestureRecognizer(onTapped)
+        
+        // Visual feedback - make it feel tappable
+        blurView.isUserInteractionEnabled = true
+        
         return blurView
+    }
+    
+    @objc func onDealTapped(_ sender: UITapGestureRecognizer) {
+        guard let id = sender.dealID,
+              let url = URL(string: "https://www.cheapshark.com/redirect?dealID=\(id)") else { return }
+
+        UIApplication.shared.open(url)
+    }
+}
+
+private var dealIDKey: UInt8 = 0
+
+extension UITapGestureRecognizer {
+    var dealID: String? {
+        get { return objc_getAssociatedObject(self, &dealIDKey) as? String }
+        set { objc_setAssociatedObject(self, &dealIDKey, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC) }
     }
 }

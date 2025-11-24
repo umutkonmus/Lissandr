@@ -13,7 +13,7 @@ struct GameDetailData {
     let thumb: String
     var currentPrice: Double?
     var historicalLow: Double?
-    var deals: [(storeName: String, price: Double, retailPrice: Double)]
+    var deals: [(storeName: String, dealID: String, price: Double, retailPrice: Double)]
 }
 
 protocol GameDetailViewProtocol: AnyObject {

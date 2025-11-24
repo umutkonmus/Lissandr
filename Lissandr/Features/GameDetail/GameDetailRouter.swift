@@ -8,7 +8,7 @@
 import UIKit
 
 final class GameDetailRouter: GameDetailRouterProtocol {
-    static func createModule(gameID: String, title: String, thumb: String) -> UIViewController {
+    static func createModule(gameID: String,title: String, thumb: String) -> UIViewController {
         let vc = GameDetailViewController()
         let interactor = GameDetailInteractor()
         let router = GameDetailRouter()
