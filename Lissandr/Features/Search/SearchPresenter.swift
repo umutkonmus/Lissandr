@@ -36,7 +36,7 @@ final class SearchPresenter: SearchPresenterProtocol {
                 self.detailCache.removeAll(keepingCapacity: true)
                 self.view?.showResults(items)
             } catch {
-                self.view?.showError("Arama başarısız: \(error.localizedDescription)")
+                self.view?.showError("search.error".localized(with: error.localizedDescription))
             }
             self.view?.showLoading(false)
         }
@@ -58,7 +58,7 @@ final class SearchPresenter: SearchPresenterProtocol {
 
         let watch = WatchItem(gameID: item.gameID, title: item.external, lastKnownPrice: lastKnown)
         WatchlistStore.shared.add(watch)
-        self.view?.showToast(message:"\(item.external) listeye eklendi")
+        self.view?.showToast(message: "deals.addedToWatchlist".localized(with: item.external))
     }
 
     func displayInfo(for index: Int) -> (storeName: String?, oldPrice: String?) {

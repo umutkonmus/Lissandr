@@ -33,7 +33,7 @@ final class SearchViewController: UIViewController, SearchViewProtocol, UITableV
         
         // Search Controller setup
         searchController.searchBar.delegate = self
-        searchController.searchBar.placeholder = "Oyun ara..."
+        searchController.searchBar.placeholder = "search.placeholder".localized
         searchController.obscuresBackgroundDuringPresentation = false
         searchController.hidesNavigationBarDuringPresentation = false
         navigationItem.searchController = searchController
@@ -54,7 +54,7 @@ final class SearchViewController: UIViewController, SearchViewProtocol, UITableV
         }
 
         // Empty state
-        emptyLabel.text = "Oyun aramak için yukarıdaki arama çubuğunu kullanın"
+        emptyLabel.text = "search.emptyState".localized
         emptyLabel.textAlignment = .center
         emptyLabel.textColor = .secondaryLabel
         emptyLabel.numberOfLines = 0
@@ -126,8 +126,8 @@ final class SearchViewController: UIViewController, SearchViewProtocol, UITableV
     
     func showError(_ message: String) { 
         DispatchQueue.main.async { 
-            let ac = UIAlertController(title: "Hata", message: message, preferredStyle: .alert)
-            ac.addAction(UIAlertAction(title: "Tamam", style: .default))
+            let ac = UIAlertController(title: "common.error".localized, message: message, preferredStyle: .alert)
+            ac.addAction(UIAlertAction(title: "common.ok".localized, style: .default))
             self.present(ac, animated: true)
         }
     }
@@ -146,7 +146,7 @@ final class SearchViewController: UIViewController, SearchViewProtocol, UITableV
         let cell = tableView.dequeueReusableCell(withIdentifier: DealsListCell.reuse, for: indexPath) as! DealsListCell
         let r = results[indexPath.row]
         let info = presenter.displayInfo(for: indexPath.row)
-        let storeText = info.storeName ?? "Mağaza bekleniyor…"
+        let storeText = info.storeName ?? "search.storeLoading".localized
         let oldPriceText = info.oldPrice ?? "-"
         let gameID = presenter.getGameID(at: indexPath.row)
         cell.configure(title: r.external, store: storeText, price: r.cheapest, oldPrice: oldPriceText, thumbURL: r.thumb, gameID: gameID)

@@ -32,7 +32,7 @@ final class WatchlistViewController: UIViewController, WatchlistViewProtocol, UI
         // Large title
         navigationController?.navigationBar.prefersLargeTitles = true
         navigationItem.largeTitleDisplayMode = .always
-        title = "Takip Listem"
+        title = "watchlist.title".localized
 
         // Table
         view.addSubview(tableView)
@@ -93,8 +93,8 @@ final class WatchlistViewController: UIViewController, WatchlistViewProtocol, UI
     }
 
     func showError(_ message: String) {
-        let ac = UIAlertController(title: "Hata", message: message, preferredStyle: .alert)
-        ac.addAction(UIAlertAction(title: "Tamam", style: .default))
+        let ac = UIAlertController(title: "common.error".localized, message: message, preferredStyle: .alert)
+        ac.addAction(UIAlertAction(title: "common.ok".localized, style: .default))
         present(ac, animated: true)
     }
 
@@ -115,7 +115,7 @@ final class WatchlistViewController: UIViewController, WatchlistViewProtocol, UI
     
     // Swipe to delete
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-        let delete = UIContextualAction(style: .destructive, title: "Sil") { [weak self] _, _, done in
+        let delete = UIContextualAction(style: .destructive, title: "common.delete".localized) { [weak self] _, _, done in
             self?.presenter.delete(at: indexPath.row)
             done(true)
         }

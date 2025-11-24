@@ -19,9 +19,9 @@ final class AppSettingsViewController: UIViewController {
         
         var title: String {
             switch self {
-            case .notifications: return "Bildirimler"
-            case .priceAlerts: return "Fiyat Alarmları"
-            case .about: return "Hakkında"
+            case .notifications: return "settings.notifications".localized
+            case .priceAlerts: return "settings.priceAlerts".localized
+            case .about: return "settings.about".localized
             }
         }
     }
@@ -49,7 +49,7 @@ final class AppSettingsViewController: UIViewController {
     private func setupUI() {
         view.backgroundColor = .systemGroupedBackground
         
-        title = "Ayarlar"
+        title = "settings.title".localized
         
         // Extended layout
         edgesForExtendedLayout = [.top, .bottom]
@@ -98,9 +98,9 @@ extension AppSettingsViewController: UITableViewDataSource, UITableViewDelegate 
         
         switch settingsSection {
         case .notifications:
-            return "Fiyat düşüşleri ve alarmlar için bildirim alın"
+            return "settings.notificationsFooter".localized
         case .priceAlerts:
-            return "Oyunlar için özel fiyat alarmları kurun"
+            return "settings.priceAlertsFooter".localized
         case .about:
             return nil
         }
@@ -115,7 +115,7 @@ extension AppSettingsViewController: UITableViewDataSource, UITableViewDelegate 
         case .notifications:
             if indexPath.row == 0 {
                 let cell = tableView.dequeueReusableCell(withIdentifier: "SwitchCell", for: indexPath) as! LiquidGlassSwitchCell
-                cell.configure(title: "Bildirimleri Aç", isOn: UserDefaults.standard.bool(forKey: "notifications_enabled"))
+                cell.configure(title: "settings.enableNotifications".localized, isOn: UserDefaults.standard.bool(forKey: "notifications_enabled"))
                 cell.onToggle = { isOn in
                     UserDefaults.standard.set(isOn, forKey: "notifications_enabled")
                     if isOn {
@@ -125,8 +125,8 @@ extension AppSettingsViewController: UITableViewDataSource, UITableViewDelegate 
                 return cell
             } else {
                 let cell = LiquidGlassCell(style: .value1, reuseIdentifier: nil)
-                cell.textLabel?.text = "Arka Plan Yenileme"
-                cell.detailTextLabel?.text = "Saatte bir"
+                cell.textLabel?.text = "settings.backgroundRefresh".localized
+                cell.detailTextLabel?.text = "settings.hourly".localized
                 cell.accessoryType = .none
                 cell.selectionStyle = .none
                 return cell
@@ -134,9 +134,9 @@ extension AppSettingsViewController: UITableViewDataSource, UITableViewDelegate 
             
         case .priceAlerts:
             let cell = LiquidGlassCell(style: .value1, reuseIdentifier: nil)
-            cell.textLabel?.text = "Fiyat Alarmlarını Yönet"
+            cell.textLabel?.text = "settings.managePriceAlerts".localized
             let alertCount = PriceAlertStore.shared.getActiveAlerts().count
-            cell.detailTextLabel?.text = "\(alertCount) aktif"
+            cell.detailTextLabel?.text = "settings.activeAlerts".localized(with: alertCount)
             cell.accessoryType = .disclosureIndicator
             return cell
             
@@ -146,17 +146,17 @@ extension AppSettingsViewController: UITableViewDataSource, UITableViewDelegate 
             
             switch indexPath.row {
             case 0:
-                cell.textLabel?.text = "Versiyon"
+                cell.textLabel?.text = "settings.version".localized
                 let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.0"
                 let build = Bundle.main.infoDictionary?["CFBundleVersion"] as? String ?? "1"
                 cell.detailTextLabel?.text = "\(version) (\(build))"
                 cell.accessoryType = .none
             case 1:
-                cell.textLabel?.text = "Geliştirici"
+                cell.textLabel?.text = "settings.developer".localized
                 cell.detailTextLabel?.text = "Umut Konmuş"
                 cell.accessoryType = .none
             case 2:
-                cell.textLabel?.text = "GitHub"
+                cell.textLabel?.text = "settings.github".localized
                 cell.detailTextLabel?.text = "@umutkonmus"
                 cell.accessoryType = .disclosureIndicator
             default:
@@ -194,9 +194,9 @@ extension AppSettingsViewController: UITableViewDataSource, UITableViewDelegate 
         UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound]) { granted, error in
             DispatchQueue.main.async {
                 if granted {
-                    self.showToast(message: "Bildirimler açıldı")
+                    self.showToast(message: "settings.notificationsEnabled".localized)
                 } else {
-                    self.showToast(message: "Bildirim izni reddedildi")
+                    self.showToast(message: "settings.notificationsDenied".localized)
                     UserDefaults.standard.set(false, forKey: "notifications_enabled")
                     self.tableView.reloadData()
                 }
@@ -204,5 +204,3 @@ extension AppSettingsViewController: UITableViewDataSource, UITableViewDelegate 
         }
     }
 }
-
-

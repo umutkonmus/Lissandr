@@ -28,7 +28,7 @@ final class SplashViewController: UIViewController, SplashViewProtocol {
             make.width.height.equalTo(120)
         }
         
-        powered.text = "Powered by CheapShark"
+        powered.text = "splash.poweredBy".localized
         powered.textAlignment = .center
         powered.textColor = .secondaryLabel
         powered.font = .preferredFont(forTextStyle: .footnote)
@@ -51,11 +51,18 @@ final class SplashViewController: UIViewController, SplashViewProtocol {
         presenter.viewDidAppear()
     }
     
-    func showLoading(_ loading: Bool) { DispatchQueue.main.async { loading ? self.activity.startAnimating() : self.activity.stopAnimating() } }
+    func showLoading(_ loading: Bool) { 
+        DispatchQueue.main.async { 
+            loading ? self.activity.startAnimating() : self.activity.stopAnimating() 
+        } 
+    }
+    
     func showError(_ message: String) {
         DispatchQueue.main.async { [weak self] in
-            let ac = UIAlertController(title: "Hata", message: message, preferredStyle: .alert)
-            ac.addAction(UIAlertAction(title: "Tekrar Dene", style: .default, handler: { _ in self?.presenter.viewDidAppear() }))
+            let ac = UIAlertController(title: "common.error".localized, message: message, preferredStyle: .alert)
+            ac.addAction(UIAlertAction(title: "common.retry".localized, style: .default, handler: { _ in 
+                self?.presenter.viewDidAppear() 
+            }))
             self?.present(ac, animated: true)
         }
     }

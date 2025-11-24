@@ -26,7 +26,7 @@ final class GameDetailViewController: UIViewController, GameDetailViewProtocol {
     
     private func setupUI() {
         view.backgroundColor = .systemBackground
-        title = "Oyun Detayı"
+        title = "detail.title".localized
         
         // Extended layout
         edgesForExtendedLayout = [.top, .bottom]
@@ -77,7 +77,7 @@ final class GameDetailViewController: UIViewController, GameDetailViewProtocol {
             // Remove from watchlist
             WatchlistStore.shared.remove(gameID: gameData.gameID)
             updateBookmarkIcon()
-            showToast(message: "\(gameData.title) takip listesinden çıkarıldı")
+            showToast(message: "detail.removedFromWatchlist".localized(with: gameData.title))
         } else {
             // Add to watchlist
             presenter.didTapAddToWatchlist()
@@ -110,26 +110,26 @@ final class GameDetailViewController: UIViewController, GameDetailViewProtocol {
         
         // Yeni alarm kur
         let alert = UIAlertController(
-            title: "Fiyat Alarmı Kur",
-            message: "Güncel fiyat: $\(String(format: "%.2f", currentPrice))\n\nHedef fiyatınızı girin:",
+            title: "alert.setPriceAlert".localized,
+            message: "alert.currentPrice".localized(with: currentPrice),
             preferredStyle: .alert
         )
         
         alert.addTextField { textField in
-            textField.placeholder = "Örn: \(String(format: "%.2f", currentPrice * 0.8))"
+            textField.placeholder = "alert.placeholder".localized(with: currentPrice * 0.8)
             textField.keyboardType = .decimalPad
             textField.text = String(format: "%.2f", currentPrice * 0.8)
         }
         
-        alert.addAction(UIAlertAction(title: "İptal", style: .cancel))
-        alert.addAction(UIAlertAction(title: "Alarm Kur", style: .default) { [weak self] _ in
+        alert.addAction(UIAlertAction(title: "common.cancel".localized, style: .cancel))
+        alert.addAction(UIAlertAction(title: "alert.setAlarm".localized, style: .default) { [weak self] _ in
             guard let self = self,
                   let text = alert.textFields?.first?.text,
                   let targetPrice = Double(text),
                   let gameData = self.gameData else { return }
             
             if targetPrice >= currentPrice {
-                self.showToast(message: "Hedef fiyat güncel fiyattan düşük olmalı")
+                self.showToast(message: "alert.targetMustBeLower".localized)
                 return
             }
             
@@ -141,7 +141,7 @@ final class GameDetailViewController: UIViewController, GameDetailViewProtocol {
             )
             
             PriceAlertStore.shared.add(priceAlert)
-            self.showToast(message: "Fiyat alarmı kuruldu! $\(String(format: "%.2f", targetPrice))")
+            self.showToast(message: "alert.alarmSet".localized(with: targetPrice))
         })
         
         present(alert, animated: true)
@@ -149,20 +149,20 @@ final class GameDetailViewController: UIViewController, GameDetailViewProtocol {
     
     private func showUpdateAlertDialog(existingAlert: PriceAlert, currentPrice: Double) {
         let alert = UIAlertController(
-            title: "Mevcut Alarm",
-            message: "Bu oyun için zaten bir alarm var:\nHedef: $\(String(format: "%.2f", existingAlert.targetPrice))\n\nNe yapmak istersiniz?",
+            title: "alert.existingAlert".localized,
+            message: "alert.existingAlertMessage".localized(with: existingAlert.targetPrice),
             preferredStyle: .alert
         )
         
-        alert.addAction(UIAlertAction(title: "İptal", style: .cancel))
+        alert.addAction(UIAlertAction(title: "common.cancel".localized, style: .cancel))
         
-        alert.addAction(UIAlertAction(title: "Fiyatı Güncelle", style: .default) { [weak self] _ in
+        alert.addAction(UIAlertAction(title: "alert.updatePrice".localized, style: .default) { [weak self] _ in
             self?.showUpdatePriceDialog(existingAlert: existingAlert, currentPrice: currentPrice)
         })
         
-        alert.addAction(UIAlertAction(title: "Alarmı Sil", style: .destructive) { [weak self] _ in
+        alert.addAction(UIAlertAction(title: "alert.deleteAlarm".localized, style: .destructive) { [weak self] _ in
             PriceAlertStore.shared.remove(id: existingAlert.id)
-            self?.showToast(message: "Alarm silindi")
+            self?.showToast(message: "alert.alarmDeleted".localized)
         })
         
         present(alert, animated: true)
@@ -170,26 +170,26 @@ final class GameDetailViewController: UIViewController, GameDetailViewProtocol {
     
     private func showUpdatePriceDialog(existingAlert: PriceAlert, currentPrice: Double) {
         let alert = UIAlertController(
-            title: "Hedef Fiyatı Güncelle",
-            message: "Güncel fiyat: $\(String(format: "%.2f", currentPrice))\n\nYeni hedef fiyatı girin:",
+            title: "alert.updatePriceTitle".localized,
+            message: "alert.updatePriceMessage".localized(with: currentPrice),
             preferredStyle: .alert
         )
         
         alert.addTextField { textField in
-            textField.placeholder = "Örn: \(String(format: "%.2f", currentPrice * 0.8))"
+            textField.placeholder = "alert.placeholder".localized(with: currentPrice * 0.8)
             textField.keyboardType = .decimalPad
             textField.text = String(format: "%.2f", existingAlert.targetPrice)
         }
         
-        alert.addAction(UIAlertAction(title: "İptal", style: .cancel))
-        alert.addAction(UIAlertAction(title: "Güncelle", style: .default) { [weak self] _ in
+        alert.addAction(UIAlertAction(title: "common.cancel".localized, style: .cancel))
+        alert.addAction(UIAlertAction(title: "common.update".localized, style: .default) { [weak self] _ in
             guard let self = self,
                   let text = alert.textFields?.first?.text,
                   let targetPrice = Double(text),
                   let gameData = self.gameData else { return }
             
             if targetPrice >= currentPrice {
-                self.showToast(message: "Hedef fiyat güncel fiyattan düşük olmalı")
+                self.showToast(message: "alert.targetMustBeLower".localized)
                 return
             }
             
@@ -201,7 +201,7 @@ final class GameDetailViewController: UIViewController, GameDetailViewProtocol {
             )
             
             PriceAlertStore.shared.updateOrAdd(updatedAlert)
-            self.showToast(message: "Alarm güncellendi! $\(String(format: "%.2f", targetPrice))")
+            self.showToast(message: "alert.alarmUpdated".localized(with: targetPrice))
         })
         
         present(alert, animated: true)
@@ -245,8 +245,8 @@ final class GameDetailViewController: UIViewController, GameDetailViewProtocol {
     
     func showError(_ message: String) {
         DispatchQueue.main.async { [weak self] in
-            let alert = UIAlertController(title: "Hata", message: message, preferredStyle: .alert)
-            alert.addAction(UIAlertAction(title: "Tamam", style: .default))
+            let alert = UIAlertController(title: "detail.error".localized, message: message, preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "detail.ok".localized, style: .default))
             self?.present(alert, animated: true)
         }
     }
@@ -297,14 +297,14 @@ final class GameDetailViewController: UIViewController, GameDetailViewProtocol {
         
         // Current Price
         let currentStack = createPriceColumn(
-            title: "Güncel Fiyat",
+            title: "detail.currentPrice".localized,
             price: game.currentPrice
         )
         stack.addArrangedSubview(currentStack)
         
         // Historical Low
         let lowStack = createPriceColumn(
-            title: "En Düşük Fiyat",
+            title: "detail.historicalLow".localized,
             price: game.historicalLow
         )
         stack.addArrangedSubview(lowStack)
@@ -326,7 +326,7 @@ final class GameDetailViewController: UIViewController, GameDetailViewProtocol {
         
         let priceLabel = UILabel()
         if let price = price {
-            priceLabel.text = String(format: "$%.2f", price)
+            priceLabel.text = "price.format".localized(with: price)
             priceLabel.font = .systemFont(ofSize: 28, weight: .bold)
             priceLabel.textColor = .systemGreen
         } else {
@@ -343,7 +343,7 @@ final class GameDetailViewController: UIViewController, GameDetailViewProtocol {
         let container = UIView()
         
         let titleLabel = UILabel()
-        titleLabel.text = "Mağaza Fiyatları"
+        titleLabel.text = "detail.storePrices".localized
         titleLabel.font = .systemFont(ofSize: 20, weight: .semibold)
         container.addSubview(titleLabel)
         titleLabel.snp.makeConstraints { make in
@@ -407,7 +407,7 @@ final class GameDetailViewController: UIViewController, GameDetailViewProtocol {
         }
         
         let priceLabel = UILabel()
-        priceLabel.text = String(format: "$%.2f", price)
+        priceLabel.text = "price.format".localized(with: price)
         priceLabel.font = .systemFont(ofSize: 18, weight: .bold)
         priceLabel.textColor = .systemGreen
         blurView.contentView.addSubview(priceLabel)
@@ -419,7 +419,7 @@ final class GameDetailViewController: UIViewController, GameDetailViewProtocol {
         if retailPrice > price {
             let oldPriceLabel = UILabel()
             oldPriceLabel.attributedText = NSAttributedString(
-                string: String(format: "$%.2f", retailPrice),
+                string: "price.format".localized(with: retailPrice),
                 attributes: [
                     .strikethroughStyle: NSUnderlineStyle.single.rawValue,
                     .foregroundColor: UIColor.secondaryLabel

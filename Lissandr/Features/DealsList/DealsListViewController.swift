@@ -65,7 +65,7 @@ final class DealsListViewController: UIViewController, DealsListViewProtocol, UI
         // Large title
         navigationController?.navigationBar.prefersLargeTitles = true
         navigationItem.largeTitleDisplayMode = .always
-        title = "Oyun Fırsatları"
+        title = String(localized: "deals.title", comment: "Deals screen title")
         
         // TableView setup
         view.addSubview(tableView)
@@ -177,8 +177,15 @@ final class DealsListViewController: UIViewController, DealsListViewProtocol, UI
     
     func showError(_ message: String) {
         DispatchQueue.main.async { [weak self] in
-            let ac = UIAlertController(title: "Hata", message: message, preferredStyle: .alert)
-            ac.addAction(UIAlertAction(title: "Tamam", style: .default))
+            let ac = UIAlertController(
+                title: String(localized: "common.error", comment: "Error alert title"),
+                message: message,
+                preferredStyle: .alert
+            )
+            ac.addAction(UIAlertAction(
+                title: String(localized: "common.ok", comment: "OK button"),
+                style: .default
+            ))
             self?.present(ac, animated: true)
         }
     }

@@ -75,18 +75,18 @@ final class PriceAlertCell: UITableViewCell {
         gameLabel.text = alert.gameTitle
         
         if let current = alert.currentPrice {
-            priceLabel.text = String(format: "Hedef: $%.2f • Güncel: $%.2f", alert.targetPrice, current)
+            priceLabel.text = String(format: NSLocalizedString("priceAlerts.targetAndCurrent", comment: ""), alert.targetPrice, current)
         } else {
-            priceLabel.text = String(format: "Hedef fiyat: $%.2f", alert.targetPrice)
+            priceLabel.text = String(format: NSLocalizedString("priceAlerts.targetPriceOnly", comment: ""), alert.targetPrice)
         }
         
         toggleSwitch.isOn = alert.isActive
         
         if alert.isActive {
-            statusLabel.text = "✓ Aktif"
+            statusLabel.text = NSLocalizedString("priceAlerts.activeStatus", comment: "")
             statusLabel.textColor = .systemGreen
         } else {
-            statusLabel.text = "○ Pasif"
+            statusLabel.text = NSLocalizedString("priceAlerts.inactiveStatus", comment: "")
             statusLabel.textColor = .systemGray
         }
     }

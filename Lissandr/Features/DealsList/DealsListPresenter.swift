@@ -46,7 +46,7 @@ final class DealsListPresenter: DealsListPresenterProtocol {
                 }
                 self.view?.display(deals: self.deals, stores: self.storesMap)
             } catch {
-                self.view?.showError("Bir şeyler ters gitti: \(error.localizedDescription)")
+                self.view?.showError("deals.error".localized(with: error.localizedDescription))
             }
             self.view?.showLoading(false)
         }
@@ -65,7 +65,7 @@ final class DealsListPresenter: DealsListPresenterProtocol {
                 }
             } catch {
                 await MainActor.run {
-                    self.view?.showError("Oyun detayı açılamadı: \(error.localizedDescription)")
+                    self.view?.showError("detail.cannotOpen".localized(with: error.localizedDescription))
                 }
             }
         }
@@ -82,12 +82,12 @@ final class DealsListPresenter: DealsListPresenterProtocol {
                 let item = WatchItem(gameID: gameID, title: d.title, lastKnownPrice: Double(d.salePrice))
                 WatchlistStore.shared.add(item)
                 await MainActor.run {
-                    self.view?.showToast(message:"\(d.title) listeye eklendi")
+                    self.view?.showToast(message: "deals.addedToWatchlist".localized(with: d.title))
                     self.view?.reloadRow(at: index)
                 }
             } catch {
                 await MainActor.run {
-                    self.view?.showError("Listeye eklenemedi: \(error.localizedDescription)")
+                    self.view?.showError("deals.failedToAdd".localized(with: error.localizedDescription))
                 }
             }
         }

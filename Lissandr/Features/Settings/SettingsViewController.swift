@@ -30,7 +30,7 @@ final class SettingsViewController: UIViewController, SettingsViewProtocol {
     
     private func setupUI() {
         view.backgroundColor = .systemBackground
-        title = "Fiyat Alarmları"
+        title = "priceAlerts.title".localized
         
         // Extended layout
         edgesForExtendedLayout = [.top, .bottom]
@@ -46,7 +46,7 @@ final class SettingsViewController: UIViewController, SettingsViewProtocol {
         tableView.snp.makeConstraints { $0.edges.equalTo(view.safeAreaLayoutGuide) }
         
         // Empty state
-        emptyLabel.text = "Henüz fiyat alarmı yok\n\nOyun detay sayfasından\nfiyat alarmı kurabilirsiniz"
+        emptyLabel.text = "priceAlerts.noAlerts".localized + "\n\n" + "priceAlerts.setAlertHint".localized
         emptyLabel.textAlignment = .center
         emptyLabel.textColor = .secondaryLabel
         emptyLabel.numberOfLines = 0
@@ -83,8 +83,8 @@ final class SettingsViewController: UIViewController, SettingsViewProtocol {
     
     func showError(_ message: String) {
         DispatchQueue.main.async { [weak self] in
-            let alert = UIAlertController(title: "Hata", message: message, preferredStyle: .alert)
-            alert.addAction(UIAlertAction(title: "Tamam", style: .default))
+            let alert = UIAlertController(title: "common.error".localized, message: message, preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "common.ok".localized, style: .default))
             self?.present(alert, animated: true)
         }
     }
@@ -107,9 +107,9 @@ extension SettingsViewController: UITableViewDataSource, UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         if section == 0 {
-            return alerts.filter { $0.isActive }.isEmpty ? nil : "Aktif Alarmlar"
+            return alerts.filter { $0.isActive }.isEmpty ? nil : "priceAlerts.active".localized
         } else {
-            return alerts.filter { !$0.isActive }.isEmpty ? nil : "Pasif Alarmlar"
+            return alerts.filter { !$0.isActive }.isEmpty ? nil : "priceAlerts.inactive".localized
         }
     }
     
@@ -137,7 +137,7 @@ extension SettingsViewController: UITableViewDataSource, UITableViewDelegate {
         
         let alert = filteredAlerts[indexPath.row]
         
-        let delete = UIContextualAction(style: .destructive, title: "Sil") { [weak self] _, _, done in
+        let delete = UIContextualAction(style: .destructive, title: "common.delete".localized) { [weak self] _, _, done in
             guard let self else { return }
             if let globalIndex = self.alerts.firstIndex(where: { $0.id == alert.id }) {
                 self.presenter.deleteAlert(at: globalIndex)

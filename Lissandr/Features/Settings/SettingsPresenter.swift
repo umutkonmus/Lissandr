@@ -33,7 +33,7 @@ final class SettingsPresenter: SettingsPresenterProtocol {
         interactor.removeAlert(id: alert.id)
         alerts.remove(at: index)
         view?.displayAlerts(alerts)
-        view?.showToast(message: "Alarm silindi")
+        view?.showToast(message: NSLocalizedString("alert.alarmDeleted", comment: ""))
     }
     
     func toggleAlert(at index: Int) {
@@ -44,7 +44,7 @@ final class SettingsPresenter: SettingsPresenterProtocol {
         alerts[index] = alert
         view?.displayAlerts(alerts)
         
-        let status = alert.isActive ? "aktif" : "pasif"
-        view?.showToast(message: "Alarm \(status) edildi")
+        let statusKey = alert.isActive ? "alert.alarmActivated" : "alert.alarmDeactivated"
+        view?.showToast(message: NSLocalizedString(statusKey, comment: ""))
     }
 }

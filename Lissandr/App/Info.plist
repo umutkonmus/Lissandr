@@ -6,6 +6,13 @@
 	<string>1.1.0</string>
 	<key>CFBundleVersion</key>
 	<string>2</string>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>en</string>
+	<key>CFBundleLocalizations</key>
+	<array>
+		<string>en</string>
+		<string>tr</string>
+	</array>
 	<key>BGTaskSchedulerPermittedIdentifiers</key>
 	<array>
 		<string>com.uk.Lissandr.pricedrop.refresh</string>

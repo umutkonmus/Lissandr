@@ -16,4 +16,9 @@ struct DealSummary: Decodable {
     let thumb: String
     let storeID: String
     let steamAppID: String?
+    let metacriticScore: String?
+    let metacriticLink: String?
+    let steamRatingText: String?
+    let steamRatingPercent: String?
+    let steamRatingCount: String?
 }

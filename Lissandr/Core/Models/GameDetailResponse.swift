@@ -11,6 +11,7 @@ struct GameDetailResponse: Decodable {
     struct Info: Decodable {
         let title: String
         let thumb: String
+        let steamAppID: String?
     }
     struct CheapestPriceEver: Decodable {
         let price: String
@@ -25,4 +26,9 @@ struct GameDetailResponse: Decodable {
     let info: Info
     let cheapestPriceEver: CheapestPriceEver
     let deals: [Deal]?
+    let metacriticScore: String?
+    let metacriticLink: String?
+    let steamRatingText: String?
+    let steamRatingPercent: String?
+    let steamRatingCount: String?
 }
