@@ -30,7 +30,12 @@ final class DealsListPresenter: DealsListPresenterProtocol {
     func viewDidLoad() {
         Task { [weak self] in
             guard let self else { return }
-            self.view?.showLoading(true)
+            
+            // Eğer deal yoksa loading göster
+            if self.deals.isEmpty {
+                self.view?.showLoading(true)
+            }
+            
             do {
                 if self.deals.isEmpty { // if not preloaded by Splash
                     async let deals = interactor.fetchDeals()

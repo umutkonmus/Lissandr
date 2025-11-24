@@ -20,15 +20,44 @@ final class SplashPresenter: SplashPresenterProtocol {
     func viewDidAppear() {
         Task { [weak self] in
             guard let self, let view = self.view as? UIViewController else { return }
-            self.view?.showLoading(true)
+            
+            // Minimum splash animation süresi (0.3 saniye - daha da hızlı!)
+            try? await Task.sleep(nanoseconds: 300_000_000)
+            
+            // Hızlıca ana ekrana geç (boş data ile)
+            await MainActor.run {
+                self.router.routeToDeals(with: [], stores: [:], from: view)
+            }
+            
+            // Arka planda verileri yükle
             do {
                 let (deals, storesArr) = try await interactor.initialLoad()
                 let storesMap = Dictionary(uniqueKeysWithValues: storesArr.map { ($0.storeID, $0) })
-                self.router.routeToDeals(with: deals, stores: storesMap, from: view)
+                
+                // Ana ekrandaki presenter'ı güncelle
+                await MainActor.run {
+                    NotificationCenter.default.post(
+                        name: .dealsDidLoad,
+                        object: nil,
+                        userInfo: ["deals": deals, "stores": storesMap]
+                    )
+                }
             } catch {
-                self.view?.showError("Veriler alınamadı: \(error.localizedDescription)")
+                // Hata durumunda kullanıcıya toast göster
+                await MainActor.run {
+                    NotificationCenter.default.post(
+                        name: .dealsLoadFailed,
+                        object: nil,
+                        userInfo: ["error": error.localizedDescription]
+                    )
+                }
             }
-            self.view?.showLoading(false)
         }
     }
+}
+
+// Notification isimleri
+extension Notification.Name {
+    static let dealsDidLoad = Notification.Name("dealsDidLoad")
+    static let dealsLoadFailed = Notification.Name("dealsLoadFailed")
 }

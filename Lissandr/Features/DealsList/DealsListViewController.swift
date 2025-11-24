@@ -19,6 +19,40 @@ final class DealsListViewController: UIViewController, DealsListViewProtocol, UI
     private let activity = UIActivityIndicatorView(style: .large)
     private let refreshControl = UIRefreshControl()
     
+    // Empty state view
+    private lazy var emptyStateView: UIView = {
+        let container = UIView()
+        container.backgroundColor = .clear
+        
+        let stack = UIStackView()
+        stack.axis = .vertical
+        stack.spacing = 16
+        stack.alignment = .center
+        
+        let iconView = UIImageView(image: UIImage(systemName: "magnifyingglass.circle.fill"))
+        iconView.tintColor = .systemGray3
+        iconView.contentMode = .scaleAspectFit
+        iconView.snp.makeConstraints { $0.width.height.equalTo(80) }
+        
+        let label = UILabel()
+        label.text = "Fırsatlar yükleniyor..."
+        label.font = .systemFont(ofSize: 18, weight: .medium)
+        label.textColor = .secondaryLabel
+        label.textAlignment = .center
+        
+        let activitySmall = UIActivityIndicatorView(style: .medium)
+        activitySmall.startAnimating()
+        
+        stack.addArrangedSubview(iconView)
+        stack.addArrangedSubview(label)
+        stack.addArrangedSubview(activitySmall)
+        
+        container.addSubview(stack)
+        stack.snp.makeConstraints { $0.center.equalToSuperview() }
+        
+        return container
+    }()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -57,7 +91,48 @@ final class DealsListViewController: UIViewController, DealsListViewProtocol, UI
         activity.hidesWhenStopped = true
         activity.snp.makeConstraints { $0.center.equalToSuperview() }
         
+        // Notification listener'ları ekle
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(handleDealsLoaded),
+            name: .dealsDidLoad,
+            object: nil
+        )
+        
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(handleDealsLoadFailed),
+            name: .dealsLoadFailed,
+            object: nil
+        )
+        
         presenter.viewDidLoad()
+    }
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
+    
+    @objc private func handleDealsLoaded(_ notification: Notification) {
+        guard let userInfo = notification.userInfo,
+              let deals = userInfo["deals"] as? [DealSummary],
+              let stores = userInfo["stores"] as? [String: Store] else { return }
+        
+        if let presenter = presenter as? DealsListPresenter {
+            presenter.setInitialData(deals: deals, stores: stores)
+        }
+        
+        // Refresh the view
+        display(deals: deals, stores: stores)
+        showLoading(false)
+    }
+    
+    @objc private func handleDealsLoadFailed(_ notification: Notification) {
+        guard let userInfo = notification.userInfo,
+              let errorMessage = userInfo["error"] as? String else { return }
+        
+        showLoading(false)
+        showToast(message: "Veriler yüklenemedi: \(errorMessage)")
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -77,12 +152,28 @@ final class DealsListViewController: UIViewController, DealsListViewProtocol, UI
         self.deals = deals
         self.stores = stores
         DispatchQueue.main.async { 
+            // Empty state'i gizle
+            self.emptyStateView.removeFromSuperview()
+            
             self.tableView.reloadData()
             self.refreshControl.endRefreshing()
         }
     }
     
-    func showLoading(_ loading: Bool) { DispatchQueue.main.async { loading ? self.activity.startAnimating() : self.activity.stopAnimating() } }
+    func showLoading(_ loading: Bool) {
+        DispatchQueue.main.async {
+            if loading {
+                self.activity.startAnimating()
+                // Eğer deal yoksa empty state göster
+                if self.deals.isEmpty {
+                    self.view.addSubview(self.emptyStateView)
+                    self.emptyStateView.snp.makeConstraints { $0.edges.equalTo(self.tableView) }
+                }
+            } else {
+                self.activity.stopAnimating()
+            }
+        }
+    }
     
     func showError(_ message: String) {
         DispatchQueue.main.async { [weak self] in
