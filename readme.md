@@ -1,5 +1,3 @@
-
-
 # 🧊 Lissandr
 
 **Lissandr** is an iOS application that helps you track and monitor game discounts using the [CheapShark API](https://apidocs.cheapshark.com).  
@@ -13,7 +11,7 @@ Built with **Swift**, **UIKit**, **SnapKit**, and the **VIPER architecture**, it
 - 🔍 **Dedicated Search Tab** — Search button positioned separately on the tab bar for quick access.
 - 📊 **Detailed Game View** — Tap any game to see comprehensive price information across multiple stores.
 - 🧾 **Track Games** — Add games to your Watchlist to monitor price drops.
-- 💰 **Push Notifications** — Get notified when a tracked game goes on sale.
+- 💰 **Local Notifications** — Receive price-drop and target-price alerts when the app detects a matching deal.
 - 🎨 **Liquid Glass Design** — Modern blur effects and continuous corner curves following Apple's design guidelines.
 - 📱 **Native iOS UI** — Built with SnapKit and UIKit, featuring large titles and smooth animations.
 - 🔁 **Persistent Storage** — Your watchlist is saved locally using `UserDefaults`.
@@ -58,10 +56,6 @@ GET https://www.cheapshark.com/api/1.0/deal?id={dealID}
 
 ---
 
-## 📱 Screenshots
-
----
-
 ## 🚀 Version History
 
 ### v1.1.0 (Latest)
@@ -77,3 +71,4 @@ GET https://www.cheapshark.com/api/1.0/deal?id={dealID}
 
 Inspired by **Lissandra** from *League of Legends* — elegant, cold, and precise ❄️ 
 Many thanks to Wtcn :) 
+
